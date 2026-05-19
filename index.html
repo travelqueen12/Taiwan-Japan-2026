@@ -3,475 +3,627 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taiwan & Okinawa Family Portal v3.0</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>Taipei + Okinawa Trip</title>
     <style>
-        .hidden-view { display: none !important; }
-        #map { height: 260px; width: 100%; border-radius: 1rem; z-index: 1; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #FFE5D9 0%, #FFD4B8 50%, #FFC9A3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(255, 107, 42, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FF6B2A 0%, #FF8C42 50%, #FFA552 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '✈️';
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.15;
+            top: -20px;
+            right: -20px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 6px;
+            border-radius: 8px;
+        }
+
+        .language-toggle button {
+            padding: 6px 14px;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+
+        .language-toggle button.active {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .summary-section {
+            padding: 35px 30px;
+            background: linear-gradient(135deg, #FFF5F0 0%, #FFEDEA 100%);
+            border-bottom: 3px solid #FF6B2A;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #C84B1F;
+            margin-bottom: 20px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #FF6B2A 0%, #FF8C42 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 42, 0.2);
+        }
+
+        .summary-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-card .label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .itinerary-section {
+            padding: 30px;
+        }
+
+        .day-card {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            border: 2px solid #FF6B2A;
+            transition: all 0.3s;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #FF6B2A 0%, #FF8C42 100%);
+            color: white;
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .day-header:hover {
+            background: linear-gradient(135deg, #E55A19 0%, #FF7A2F 100%);
+        }
+
+        .day-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .day-card.expanded .day-content {
+            max-height: 1000px;
+        }
+
+        .activity-list {
+            padding: 20px;
+        }
+
+        .activity {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: #FFF9F5;
+            border-left: 4px solid #FF6B2A;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .activity:hover {
+            background: #FFECDE;
+            transform: translateX(5px);
+        }
+
+        .activity-time-location {
+            font-weight: 600;
+            color: #C84B1F;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .activity-note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .weather {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: white;
+            opacity: 0.95;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border: 2px solid #FF6B2A;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #FF6B2A 0%, #FF8C42 100%);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 13px 13px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .modal-detail {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #FFECDE;
+        }
+
+        .modal-detail:last-child {
+            border-bottom: none;
+        }
+
+        .modal-label {
+            font-weight: 600;
+            color: #FF6B2A;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .modal-value {
+            color: #333;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            color: #FF6B2A;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #E55A19;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s;
+        }
+
+        .day-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .cn { display: none; }
+        body.chinese .en { display: none; }
+        body.chinese .cn { display: inline; }
     </style>
 </head>
-<body class="bg-orange-50/40 font-sans text-slate-800 antialiased min-h-screen pb-12">
+<body>
 
-    <div id="summary-view" class="max-w-md mx-auto">
-        <div class="relative bg-gradient-to-b from-orange-500 via-amber-500 to-amber-400 text-slate-900 px-6 pt-14 pb-10 shadow-lg rounded-b-[2.5rem]">
-            <div class="relative flex flex-col items-center text-center">
-                <span class="bg-white/90 text-orange-600 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                    <i class="fa-solid fa-calculator text-amber-500 mr-1"></i> Self-Contained Edition v3.0
-                </span>
-                <h1 class="text-3xl font-black mt-3 tracking-tight">Taiwan & Okinawa</h1>
-                <p class="text-amber-950/80 text-xs mt-1 font-bold">Offline Embedded Schedule Engine Active</p>
-            </div>
+<div class="container">
+    <div class="header">
+        <div class="language-toggle">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="cn">中文</button>
         </div>
+        <h1><span class="en">✈️ Taipei + Okinawa</span><span class="cn">✈️ 台北 + 冲绳</span></h1>
+        <p><span class="en">May 27 - June 1, 2026</span><span class="cn">2026年5月27日 - 6月1日</span></p>
+    </div>
 
-        <div class="px-4 py-6 space-y-4">
-            <h2 class="font-black text-slate-900 text-base flex items-center gap-2 px-1">
-                <i class="fa-solid fa-umbrella-beach text-orange-500"></i> Trip Calendar Dashboard
-            </h2>
-            <div id="calendar-hub" class="space-y-3.5"></div>
+    <div class="summary-section">
+        <div class="summary-title"><span class="en">📍 Trip Summary</span><span class="cn">📍 行程概览</span></div>
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="value">6</div>
+                <div class="label"><span class="en">Days</span><span class="cn">天</span></div>
+            </div>
+            <div class="summary-card">
+                <div class="value">2</div>
+                <div class="label"><span class="en">Countries</span><span class="cn">国家</span></div>
+            </div>
+            <div class="summary-card">
+                <div class="value">🏖️ 🏯</div>
+                <div class="label"><span class="en">Highlights</span><span class="cn">亮点</span></div>
+            </div>
         </div>
     </div>
 
-    <div id="detail-view" class="max-w-md mx-auto hidden-view">
-        <div class="bg-white/90 backdrop-blur-md px-4 py-3.5 sticky top-0 border-b border-orange-100 flex items-center justify-between z-50 shadow-sm">
-            <button onclick="showSummaryView()" class="text-xs font-black text-orange-600 flex items-center gap-1.5 bg-orange-50 px-3 py-2 rounded-xl">
-                <i class="fa-solid fa-house-chimney-user"></i> Dashboard
-            </button>
-            <span id="nav-date-badge" class="text-xs font-black text-teal-800 bg-teal-50 border border-teal-100 px-3 py-1 rounded-xl">Date</span>
-        </div>
-
-        <div class="p-4">
-            <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-orange-100">
-                <div id="map" class="shadow-inner"></div>
+    <div class="itinerary-section">
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 May 27 (Wed) - Arrive Okinawa</span><span class="cn">📅 5月27日（周三）- 抵达冲绳</span>
+                    <div class="weather">
+                        <span>✈️</span><span class="en">Arrival Day</span><span class="cn">抵达日</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'May 27, 20:50', 'Arrive Naha Airport', 'Naha Airport', 'Immigration & Customs')">
+                        <div class="activity-time-location">20:50 • Arrive Naha Airport</div>
+                        <div class="activity-note">Immigration & Customs</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 27, 22:30', 'Hotel Chatan by Sunrest Resort', 'Chatan/American Village', 'Late snack/rest')">
+                        <div class="activity-time-location">22:30 • Hotel Chatan by Sunrest Resort</div>
+                        <div class="activity-note">Late snack/rest</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="px-4 pb-8 space-y-4" id="detail-timeline-container"></div>
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 May 28 (Thu) - Okinawa Adventures</span><span class="cn">📅 5月28日（周四）- 冲绳冒险</span>
+                    <div class="weather">
+                        <span>☀️</span><span class="en">28°C, Sunny</span><span class="cn">28°C，晴天</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'May 28, 07:30', 'Leave Hotel for Breakfast', 'Chatan', 'Morning start')">
+                        <div class="activity-time-location">07:30 • Leave Hotel for Breakfast</div>
+                        <div class="activity-note">Morning start</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 28, 10:00', 'Okinawa Churaumi Aquarium', 'Motobu', 'Indoor/Air-con. View whale sharks')">
+                        <div class="activity-time-location">10:00 • Okinawa Churaumi Aquarium</div>
+                        <div class="activity-note">Indoor/Air-con. View whale sharks</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 28, 14:30', 'Kouri Island & Bridge', 'Kouri Island', 'Scenic drive. Photo at the bridge')">
+                        <div class="activity-time-location">14:30 • Kouri Island & Bridge</div>
+                        <div class="activity-note">Scenic drive. Photo opportunity</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 28, 16:00', 'Cape Manzamo', 'Onna Village', 'Flat walk. New rest area with AC')">
+                        <div class="activity-time-location">16:00 • Cape Manzamo</div>
+                        <div class="activity-note">Flat walk. Rest area with AC</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 28, 17:30', 'AEON Mall Okinawa Rycom', 'Kitanakagusuku', 'Large Mall. Shopping carts/seats')">
+                        <div class="activity-time-location">17:30 • AEON Mall Okinawa Rycom</div>
+                        <div class="activity-note">Shopping & dining</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 28, 20:30', 'Return to Hotel', 'North Chatan', 'Rest & Dinner')">
+                        <div class="activity-time-location">20:30 • Return to Hotel Chatan</div>
+                        <div class="activity-note">Short 15-min drive</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 May 29 (Fri) - Culture & Markets</span><span class="cn">📅 5月29日（周五）- 文化与市集</span>
+                    <div class="weather">
+                        <span>☀️</span><span class="en">27°C, Warm</span><span class="cn">27°C，温暖</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'May 29, 09:30', 'Depart Hotel', 'Chatan', 'Head South')">
+                        <div class="activity-time-location">09:30 • Depart Hotel</div>
+                        <div class="activity-note">Head South</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 10:30', 'Naminoue Shrine', 'Naha', 'Parking is close. Photo on cliff')">
+                        <div class="activity-time-location">10:30 • Naminoue Shrine</div>
+                        <div class="activity-note">Beautiful cliff location</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 11:30', 'Makishi Public Market', 'Naha', 'Indoor market. Okinawa Kitchen')">
+                        <div class="activity-time-location">11:30 • Makishi Public Market</div>
+                        <div class="activity-note">Local seafood & culture</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 13:30', 'Kokusai Street', 'Naha', 'Walk short distance. Buy gifts')">
+                        <div class="activity-time-location">13:30 • Kokusai Street</div>
+                        <div class="activity-note">Shopping & dining</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 15:30', 'Tsuboya Pottery Street', 'Naha', 'Quiet & Relaxing. Traditional crafts')">
+                        <div class="activity-time-location">15:30 • Tsuboya Pottery Street</div>
+                        <div class="activity-note">Traditional pottery & crafts</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 17:30', 'Refuel & Return Car', 'Bee Rent Chatan', 'Return car before 18:30')">
+                        <div class="activity-time-location">17:30 • Refuel & Return Car</div>
+                        <div class="activity-note">Return before 18:30</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 29, 19:00', 'Farewell Dinner', 'American Village', 'Sunset views near hotel')">
+                        <div class="activity-time-location">19:00 • Farewell Dinner</div>
+                        <div class="activity-note">Sunset views</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 May 30 (Sat) - Fly to Taipei</span><span class="cn">📅 5月30日（周六）- 飞往台北</span>
+                    <div class="weather">
+                        <span>✈️</span><span class="en">Travel Day</span><span class="cn">旅行日</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'May 30, 05:30', 'Check out from Hotel', 'Hotel to Naha Airport', 'Early flight prep')">
+                        <div class="activity-time-location">05:30 • Check out from Hotel</div>
+                        <div class="activity-note">Early flight prep</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 08:00', 'Naha Airport - Flight to Taipei', 'Naha ➔ Taoyuan', 'Relax on flight')">
+                        <div class="activity-time-location">08:00 • Flight to Taipei</div>
+                        <div class="activity-note">Naha ➔ Taoyuan</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 08:45', 'Arrive Taoyuan Airport', 'Terminal 1 or 2', 'Charter driver at Arrival Hall')">
+                        <div class="activity-time-location">08:45 • Arrive Taoyuan Airport</div>
+                        <div class="activity-note">Charter driver arrival</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 13:30', 'Lanyang Museum', 'Yilan', 'Indoor/Elevators. Modern architecture')">
+                        <div class="activity-time-location">13:30 • Lanyang Museum</div>
+                        <div class="activity-note">Indoor, modern architecture</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 15:00', 'Zhang Mei Ama Farm', 'Yilan', 'Feed Capybaras. Great for photos')">
+                        <div class="activity-time-location">15:00 • Zhang Mei Ama Farm</div>
+                        <div class="activity-note">Feed capybaras & photo op</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 17:30', 'Ximending Walk', 'Taipei', 'Walk near Red House. Buy snacks')">
+                        <div class="activity-time-location">17:30 • Ximending Walk</div>
+                        <div class="activity-note">Shopping & snacks</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 30, 20:00', 'Check-in Hotel Relax III', 'Hotel Relax 3', 'End of day')">
+                        <div class="activity-time-location">20:00 • Check-in Hotel & Rest</div>
+                        <div class="activity-note">End of day</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 May 31 (Sun) - Taipei Exploration</span><span class="cn">📅 5月31日（周日）- 台北探索</span>
+                    <div class="weather">
+                        <span>🌦️</span><span class="en">26°C, Cloudy</span><span class="cn">26°C，多云</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'May 31, 08:30', 'Traditional Breakfast', 'Near Taipei Main', 'Fuhang Soy Milk')">
+                        <div class="activity-time-location">08:30 • Traditional Breakfast</div>
+                        <div class="activity-note">Local morning experience</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 31, 10:15', 'Jiufen Old Street', 'Jiufen', 'Drop at high entrance (Flat road)')">
+                        <div class="activity-time-location">10:15 • Jiufen Old Street</div>
+                        <div class="activity-note">Historic shopping district</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 31, 14:30', 'Tiaoshi Coast Coffee', 'Jinshan', 'Sea view rest. Relax & photos')">
+                        <div class="activity-time-location">14:30 • Tiaoshi Coast Coffee</div>
+                        <div class="activity-note">Sea view & afternoon tea</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 31, 18:30', 'Raohe Night Market', 'Songshan', 'One-way walk. Local food')">
+                        <div class="activity-time-location">18:30 • Raohe Night Market</div>
+                        <div class="activity-note">Street food & night market</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'May 31, 20:30', 'Return to Hotel', 'Hotel Relax 3', 'Drop off at hotel lobby')">
+                        <div class="activity-time-location">20:30 • Return to Hotel</div>
+                        <div class="activity-note">End of night</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="day-card">
+            <div class="day-header" onclick="toggleDay(this)">
+                <div>
+                    <span class="en">📅 June 1 (Mon) - Departure</span><span class="cn">📅 6月1日（周一）- 返程</span>
+                    <div class="weather">
+                        <span>✈️</span><span class="en">Departure Day</span><span class="cn">返程日</span>
+                    </div>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="day-content">
+                <div class="activity-list">
+                    <div class="activity" onclick="showModal(event, 'June 1, 08:00', 'Chengzhong Market', 'Taipei', 'Local Vibe. Old street food')">
+                        <div class="activity-time-location">08:00 • Chengzhong Market</div>
+                        <div class="activity-note">Local morning market</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'June 1, 11:45', 'Check Out from Hotel', 'Taipei ➔ Taoyuan', 'Strict 12:30 PM Arrival')">
+                        <div class="activity-time-location">11:45 • Check Out from Hotel</div>
+                        <div class="activity-note">Departure to airport</div>
+                    </div>
+                    <div class="activity" onclick="showModal(event, 'June 1, 12:30', 'Arrive Taoyuan Airport', 'Terminal 1 or 2', 'Check-in for 3 PM flight')">
+                        <div class="activity-time-location">12:30 • Arrive Taoyuan Airport</div>
+                        <div class="activity-note">Check-in for 3 PM flight</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('map', { zoomControl: false, scrollWheelZoom: false });
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        var activeMarkers = [];
-        var masterGroupedData = {};
+<!-- Modal -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Activity Details</h2>
+        </div>
+        <div id="modalBody"></div>
+    </div>
+</div>
 
-        // 📅 HARDCODED TRIP ITINERARY DATABASE (No internet connection required!)
-        const embeddedItineraryData = {
-            "May 27": [
-                { Time: "10:15", Location: "Naha Airport", Activity: "Flight Arrival & Customs Clear", Note: "Collect local Wi-Fi router boxes at the 2F counter terminal area" },
-                { Time: "11:30", Location: "Bee Rent Chatan", Activity: "Collect Rental Car Group Fleet", Note: "Ensure international driver permits and паспорта are completely ready" },
-                { Time: "12:30", Location: "Hotel Chatan", Activity: "Hotel Check-In & Drop Baggage", Note: "Base camp settled. Refresh before hitting the coastal tracking roads" },
-                { Time: "15:00", Location: "Aeon Mall", Activity: "AEON Mall Okinawa Rycom Shopping", Note: "Rent senior baby strollers at 1F info counters if legs are tired" },
-                { Time: "18:30", Location: "American Village", Activity: "Sunset Boardwalk Stroll & Dinner", Note: "Beautiful ocean neon lights frame the walkways layout nicely" }
-            ],
-            "May 28": [
-                { Time: "09:00", Location: "Hotel Chatan", Activity: "Morning Departure Northbound", Note: "Grab quick family convenience store bites for the road cruise" },
-                { Time: "10:30", Location: "Churaumi Aquarium", Activity: "Okinawa Churaumi Aquarium Tour", Note: "Whale shark massive tank feeds hit daily at exactly 15:00 and 17:00" },
-                { Time: "14:00", Location: "Kouri Island", Activity: "Cross Panoramic Bridge to Heart Rocks", Note: "Stunning wide-open blue views—flat sandy walking trails near shore" },
-                { Time: "16:30", Location: "Cape Manzamo", Activity: "Scenic Elephant Cliff Point Trail", Note: "Entire route is a wide, smoothly paved loop trail for easy walking" },
-                { Time: "19:00", Location: "Hotel Chatan", Activity: "Return to Base Camp & Relax", Note: "Dinner nearby at local non-beef pork or sushi hubs" }
-            ],
-            "May 29": [
-                { Time: "09:30", Location: "Hotel Chatan", Activity: "City Exploring Heading South", Note: "Check trunk storage settings before heading back into Naha lines" },
-                { Time: "10:15", Location: "Naminoue Shrine", Activity: "Cliffside Historical Beach Shrine", Note: "Parking sits very near to the top main gate entrances" },
-                { Time: "11:30", Location: "Makishi Public Market", Activity: "Indoor Seafood Lunch & Stalls", Note: "Pick raw catches on 1F and have them cooked cleanly up on 2F" },
-                { Time: "14:00", Location: "Kokusai Street", Activity: "Souvenir Shopping & Street Snacks", Note: "Grab fresh hot Calbee potato chips and salt cookie ice cream" },
-                { Time: "16:30", Location: "Tsuboya Pottery", Activity: "Peaceful Historical Art Lane Stroll", Note: "Look out for unique clay Shisa lion figurines guarding the roofs" },
-                { Time: "18:00", Location: "American Village", Activity: "Dinner & Coastal Evening Wind down", Note: "Final relaxation evening sequence along the Chatan shoreline lanes" }
-            ],
-            "May 30": [
-                { Time: "08:30", Location: "Hotel Chatan", Activity: "Pack Bags & Head to Airport", Note: "Drop vehicle back at Bee Rent depot layout before check-in gate lines" },
-                { Time: "11:45", Location: "Naha Airport", Activity: "International Flight OKA ✈️ TPE", Note: "Crossing borders today—keep all passport documents clearly accessible" },
-                { Time: "13:20", Location: "Taipei Airport", Activity: "Taoyuan Arrival & Private Transit", Note: "Locate professional van transfer driver holding our family name sign" },
-                { Time: "15:00", Location: "Hotel Relax 3", Activity: "Check-in Base Camp Taipei Main", Note: "Direct elevator underground access connects to all MRT rail networks" },
-                { Time: "17:30", Location: "Ximending", Activity: "Pedestrian District Night Stroll", Note: "Completely pedestrianized safety zone—perfect for late local food snacks" }
-            ],
-            "May 31": [
-                { Time: "09:00", Location: "Hotel Relax 3", Activity: "Yilan County Highway Day Trip", Note: "Private charter coach picks up directly at front door loop" },
-                { Time: "10:15", Location: "Lanyang Museum", Activity: "Geometric Coastal Museum Visit", Note: "Wide, smooth air-conditioned inner floor structures with full ramps" },
-                { Time: "12:30", Location: "Zhang Mei Ama Farm", Activity: "Capybara Feeding & Local Snacks", Note: "Super clean animal interaction rings—flat paved paths everywhere" },
-                { Time: "15:30", Location: "Jiufen Old Street", Activity: "Mountain Village Lantern Stroll", Note: "Have coach drop us at top gate to gracefully walk downhill instead" },
-                { Time: "18:30", Location: "Raohe Night Market", Activity: "Straight-Line Dinner Alley Hunt", Note: "Simple forward-and-back trail configuration makes tracking family easy" },
-                { Time: "21:00", Location: "Hotel Relax 3", Activity: "Return to Taipei Base Station", Note: "Drop shopping hauls and rest up well for the next morning" }
-            ],
-            "June 01": [
-                { Time: "09:30", Location: "Hotel Relax 3", Activity: "Taipei City Core Discovery Walk", Note: "Keep MRT transit passes layered together safely inside hand pouches" },
-                { Time: "10:00", Location: "Chengzhong Market", Activity: "Covered Heritage Morning Alleys", Note: "Incredibly authentic old Taipei vibe—try the famous hot pork cutlets" },
-                { Time: "12:00", Location: "Starbeary", Activity: "Gashapon Machine Hub & Toys", Note: "Air-conditioned toy capsule building directly near the hotel hub boundaries" },
-                { Time: "14:30", Location: "Tiaoshi", Activity: "North Coast Pacific Coffee Stop", Note: "Incredible retro bus stop view looking straight over coastal boulder lines" },
-                { Time: "17:00", Location: "Carrefour Guilin", Activity: "24H Supermarket Souvenir Sweep", Note: "Instant on-site international tax refund desks operate inside building" },
-                { Time: "19:30", Location: "Hotel Relax 3", Activity: "Final Family Packaging & Dinner", Note: "Incredible non-beef premium dim sum available directly across the street" }
-            ]
-        };
+<script>
+    let currentLanguage = 'en';
 
-        const islandWeather = {
-            "May 27": { title: "Wednesday", icon: "fa-cloud-sun", label: "28°C | Cloudy Clear", css: "bg-sky-50 text-sky-700 border-sky-100" },
-            "May 28": { title: "Thursday", icon: "fa-sun", label: "29°C | Perfect Beach Day", css: "bg-amber-50 text-amber-700 border-amber-100" },
-            "May 29": { title: "Friday", icon: "fa-cloud-sun-rain", label: "28°C | Evening Showers", css: "bg-teal-50 text-teal-700 border-teal-100" },
-            "May 30": { title: "Saturday", icon: "fa-cloud-showers-heavy", label: "29°C | Passing Rain", css: "bg-indigo-50 text-indigo-700 border-indigo-100" },
-            "May 31": { title: "Sunday", icon: "fa-sun", label: "30°C | High Sunshine Windows", css: "bg-orange-50 text-orange-700 border-orange-100" },
-            "June 01": { title: "Monday", icon: "fa-wind", label: "29°C | Breezy Ocean Fronts", css: "bg-slate-50 text-slate-700 border-slate-100" }
-        };
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentLanguage = this.dataset.lang;
 
-        const strictIntelligenceCatalog = {
-            "naha airport": {
-                title: "Naha International Airport (OKA)", hours: "06:00 - 23:30",
-                food: ["Pork Tamago Onigiri (Domestic Arrival Terminal 1F)", "A&W Airport Burgers", "Ryukyu Mura Airport Soba"],
-                highlights: ["Rental car shuttle pickups are directly outside domestic gates", "Wi-Fi routers collection hubs are on 2F"]
-            },
-            "bee rent chatan": {
-                title: "Bee Rent Okinawa (Chatan Depot)", hours: "08:00 - 19:00",
-                food: ["Ramen Danbo Chatan Sunabe", "Sushiro Chatan Ihei Branch", "Hamaya Okinawan Noodles"],
-                highlights: ["Keep international driving permits handily ready", "Inspect vehicle boundary panels thoroughly before departure"]
-            },
-            "hotel chatan": {
-                title: "Hotel Base Area (Chatan / American Village)", hours: "24h Front Desk",
-                food: ["Hamaya Okinawan Noodles", "Chatan Harbor Brewery", "Transit Cafe Okinawa"],
-                highlights: ["Take a casual sunset stroll down Sunset Beach walking paths", "Enjoy the vibrant evening neon lighting throughout American Village"]
-            },
-            "churaumi aquarium": {
-                title: "Okinawa Churaumi Aquarium", hours: "08:30 - 18:30",
-                food: ["Cafe Ocean Blue (Sit directly next to whale sharks!)", "Inoh Buffet Restaurant", "Motobu Soba Handmade House"],
-                highlights: ["🐋 Kuroshio Sea Whale Shark Feeding Shows (15:00 & 17:00 daily)", "🐬 Okichan Theater Free Dolphin Performance (10:30, 11:30, 13:00, 14:30, 16:00)"]
-            },
-            "kouri island": {
-                title: "Kouri Island & Heart Rocks", hours: "Open Public Space",
-                food: ["Kouri Shrimp Rice Truck (Garlic prawns)", "Air Kouri Cafe Terrace"],
-                highlights: ["Cross the panoramic bridge link smoothly", "Walk down to the ocean-facing Heart Rock structures"]
-            },
-            "cape manzamo": {
-                title: "Cape Manzamo Lookout", hours: "08:00 - 19:00",
-                food: ["Manzamo Rest Area Food Court", "Okinawa Soba House Umibudo"],
-                highlights: ["Stroll along completely flat, senior-safe paved loop walking trails", "Photograph the signature elephant-shaped sea cliff rocks"]
-            },
-            "aeon mall": {
-                title: "AEON Mall Okinawa Rycom", hours: "10:00 - 22:00",
-                food: ["Tonkatsu Wako (Crispy pork cutlets)", "Gourmet Kaiten Sushi Chocho", "Kaneko Hannosuke Tempura"],
-                highlights: ["🐠 View the massive 100-ton Rycom Aquarium tank on 1F", "🛒 Rent smooth mechanical senior shopping strollers at info counters"]
-            },
-            "naminoue shrine": {
-                title: "Naminoue Shrine (Naha)", hours: "09:00 - 17:00",
-                food: ["Kokusai Street Pork Tamago", "Naha Local Soba Hideaway"],
-                highlights: ["Stunning cliffside photo points looking right over Naha beach", "Paved, flat parking options sit close to main gates"]
-            },
-            "makishi public market": {
-                title: "First Makishi Public Market", hours: "08:00 - 21:00",
-                food: ["Pick raw seafood on 1F and have it cooked fresh on 2F", "Okinawa traditional braised pork belly sets"],
-                highlights: ["Perfect indoor weather-proof activity frame for family exploration", "Wide interior elevator pathways link floors smoothly"]
-            },
-            "kokusai street": {
-                title: "Kokusai Dori Shopping Street", hours: "10:00 - 22:00",
-                food: ["Calbee+ Okinawa Fresh Chips", "Blue Seal Ice Cream Hub"],
-                highlights: ["The absolute best strip for souvenir shopping and snacks", "Paved, flat, and highly lively for family strolls"]
-            },
-            "tsuboya pottery": {
-                title: "Tsuboya Pottery Street", hours: "10:00 - 18:00",
-                food: ["Soen Traditional Soba Garden"],
-                highlights: ["Peaceful stone-paved street filled with pottery workshops", "Look for unique handmade Shisa lion statues guarding roofs"]
-            },
-            "american village": {
-                title: "Mihama American Village (Chatan Coast)", hours: "10:00 - 22:00",
-                food: ["Chatan Harbor Brewery (Fresh seafood & coastal views)", "Blue Seal Ice Cream Depot (Okinawan salt cookie flavors)", "Benson's (Famous local chicken/pork hot dogs if snacking)"],
-                highlights: ["🌅 Stunning sunset viewing spots directly along the seaside boardwalk path", "Incredibly vibrant, neon-lit evening atmosphere that is completely flat for easy walking", "Excellent souvenir shops packed with local Okinawa snacks and clothing tags"]
-            },
-            "lanyang museum": {
-                title: "Lanyang Architectural Museum (Yilan)", hours: "09:00 - 17:00 (Closed Wednesdays)",
-                food: ["Silks Place Premium Roasted Duck Track", "Toucheng Harbor Seafood eats"],
-                highlights: ["Unique geometric architecture mirroring coastal rock shapes", "Wide corridors and smooth public elevators for easy walking"]
-            },
-            "jiufen old street": {
-                title: "Jiufen Mountain Old Village Street", hours: "08:00 - 19:00",
-                food: ["Lai Ah Po Taro Balls (Chewy sweet dessert)", "Ah Mei Tea House sets"],
-                highlights: ["Have drivers drop family at top entrance to walk downhill safely", "Red lanterns light up atmospheric mountain paths at dusk"]
-            },
-            "raohe night market": {
-                title: "Raohe Street Night Market (Taipei)", hours: "17:00 - 00:00",
-                food: ["Fuzhou Black Pepper Baked Buns", "Mochi Baby Steamed Pastries"],
-                highlights: ["Simplified, straight-line walking path makes tracking family easy", "Admire the gorgeous architecture of adjacent Ciyou Temple"]
-            },
-            "chengzhong market": {
-                title: "Chengzhong Market (Taipei)", hours: "09:00 - 18:00",
-                food: ["Laopai Pork Chop Noodles", "Shan Dong Green Onion Hand-Torn Egg Noodles"],
-                highlights: ["Historic, covered local market path for authentic Taipei flavors", "Flat inner alleys making it highly comfortable for family pace"]
-            },
-            "zhang mei ama farm": {
-                title: "Zhang Mei Ama's Farm (Yilan)", hours: "09:00 - 17:00",
-                food: ["Local Scallion Pancakes (Famous Sanxing green onion crispy pancakes right at the exit)", "Traditional Taro Ice Cream", "Handmade Red Bean Wheel Cakes"],
-                highlights: ["🦙 Incredibly interactive and clean animal feeding zones (Capybaras, Sika deer, and Alpacas)", "Completely flat, smooth, and senior-safe paved garden paths throughout the farm", "Includes a fun local DIY culinary experience area for making traditional snacks"]
-            },
-            "ximending": {
-                title: "Ximending Pedestrian District", hours: "11:00 - 23:00",
-                food: ["Ah Jong Flour-Rice Noodle (Famous silky pork intestine thin noodles)", "Hot-Star Large Fried Chicken (Massive crispy chicken cutlets)", "Xing Fu Tang (Hand-stirred brown sugar boba milk flagship)"],
-                highlights: ["Massive pedestrian-only walking zone making it completely safe and comfortable for family groups", "Brilliant street performances, neon lights, and a vibrant local youth culture scene", "Packed with cosmetic shops, local apparel boutiques, and souvenir outposts"]
-            },
-            "carrefour guilin": {
-                title: "Carrefour Guilin Store (24-Hour Premium Hub)", hours: "24 Hours Open",
-                food: ["Mc Donald's / Starbucks inside complex", "Gong Cha Bubble Tea Corner", "Local bakery stalls specializing in fresh scallion rolls"],
-                highlights: ["The absolute ultimate destination to buy Taiwan souvenirs (ChiaTe Pineapple cakes, local milk tea boxes, nougats)", "Equipped with wide travelator ramps and large elevators for seamless family cart navigation", "Features a massive designated tax-free refund counter directly on-site for international guests"]
-            },
-            "starbeary": {
-                title: "Starbeary Taipei (Gashapon & Toy Hub)", hours: "11:00 - 00:00 (Fri/Sat till 01:00)",
-                food: ["Adjacent to Taipei Main Station underpass local bakeries", "Tiger Sugar Milk Tea steps away", "Uncle Tetsu's Cheesecake Hub"],
-                highlights: ["An incredible treasure trove of mini capsule machines, blind boxes, and collectible anime toys", "Located right within the Asia Plaza building hub, steps from Taipei Main Station and your hotel base", "Fully air-conditioned indoor layout—the perfect quick, fun escape during rainy or hot hours"]
-            },
-            "tiaoshi": {
-                title: "Tiaoshi Coast & Scenic Highway", hours: "24 Hours Public Access (Cafes vary, mostly 11:00 - 19:00)",
-                food: ["Tiaoshi Bus Stop Cafe (Famous ocean-view coffee window)", "Local Seaside Seafood Stalls", "Traditional Taro Ice Cream Shaved Ice Cups"],
-                highlights: ["📸 Home to the most famous Instagram-worthy retro bus stop overlooking the Pacific Ocean", "Beautiful paved coastal boardwalk stretches that are flat and very comfortable for a family stroll", "Excellent refreshing pit-stop window during a day-trip loop around the northern coast"]
-            },
-            "hotel relax 3": {
-                title: "Hotel Relax III (Taipei Main Hub)", hours: "24h Front Desk",
-                food: ["Tim Ho Wan Dim Sum (Opposite station)", "Zhen Fang Savory Pork & Egg Toast"],
-                highlights: ["Incredibly central hub placement with instant underground MRT tunnel access", "Underground shopping malls steps away for seamless rainy day walking"]
+            if(currentLanguage === 'cn') {
+                document.body.classList.add('chinese');
+            } else {
+                document.body.classList.remove('chinese');
             }
-        };
+        });
+    });
 
-        const locationCoordinates = {
-            "naha airport": [26.2064, 127.6465], "bee rent chatan": [26.3190, 127.7550],
-            "hotel chatan": [26.3165, 127.7574], "churaumi aquarium": [26.6944, 127.8779], 
-            "kouri island": [26.7161, 128.0210], "cape manzamo": [26.5048, 127.8548], 
-            "aeon mall": [26.3142, 127.7946], "naminoue shrine": [26.2207, 127.6711], 
-            "makishi public market": [26.2146, 127.6883], "kokusai street": [26.2125, 127.6809],
-            "tsuboya pottery": [26.2115, 127.6922], "lanyang museum": [24.8687, 121.8315], 
-            "jiufen old street": [25.1099, 121.8452], "raohe night market": [25.0501, 121.5775],
-            "taipei airport": [25.0797, 121.2342],"zhang mei ama farm": [24.6749, 121.6756],"tiaoshi": [25.2572, 121.6332],
-            "ximending": [25.0446, 121.5063],"carrefour guilin": [25.0376, 121.5062],"starbeary": [25.0456, 121.5159],
-            "chengzhong market": [25.0440, 121.5125], "hotel relax 3": [25.0461, 121.5132]
-        };
+    function toggleDay(header) {
+        const card = header.parentElement;
+        card.classList.toggle('expanded');
+    }
 
-        // 🚀 INITIALIZE LOCAL DATAFRAME DIRECTLY: Bypasses the PapaParse internet download requirement completely!
-        window.onload = function() {
-            masterGroupedData = embeddedItineraryData;
-            renderSummaryDashboard();
-        };
+    function showModal(event, time, location, area, note) {
+        event.stopPropagation();
+        const modal = document.getElementById('detailModal');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
 
-        function renderSummaryDashboard() {
-            const hub = document.getElementById('calendar-hub');
-            hub.innerHTML = "";
-            Object.keys(masterGroupedData).forEach(dateKey => {
-                const weatherProfile = islandWeather[dateKey] || { title: "Adventure Day", icon: "fa-umbrella-beach", label: "Warm & Tropical", css: "bg-orange-50 text-orange-700 border-orange-100" };
-                const summaryCard = document.createElement('button');
-                summaryCard.onclick = () => showDetailView(dateKey);
-                summaryCard.className = "w-full bg-white p-4 rounded-2xl shadow-sm border border-orange-100/60 flex items-center justify-between hover:border-orange-300 text-left group";
-                summaryCard.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <div class="bg-gradient-to-br from-amber-400 to-orange-400 text-slate-900 font-black rounded-xl w-14 h-14 flex flex-col items-center justify-center shadow-md">
-                            <span class="text-[9px] uppercase tracking-wider opacity-80">${weatherProfile.title.substring(0,3)}</span>
-                            <span class="text-lg leading-none font-black">${dateKey.replace(/^\D+/g, '') || "★"}</span>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-slate-900 text-sm">${dateKey}</h3>
-                            <div class="inline-flex items-center gap-1 mt-1 text-[10px] font-bold border px-2 py-0.5 rounded-full ${weatherProfile.css}">
-                                <i class="fa-solid ${weatherProfile.icon}"></i><span>${weatherProfile.label}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-orange-50/50 p-2 rounded-full text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition">
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </div>
-                `;
-                hub.appendChild(summaryCard);
-            });
+        title.textContent = location;
+        body.innerHTML = `
+            <div class="modal-detail">
+                <div class="modal-label">Time</div>
+                <div class="modal-value">${time}</div>
+            </div>
+            <div class="modal-detail">
+                <div class="modal-label">Location</div>
+                <div class="modal-value">${location}</div>
+            </div>
+            <div class="modal-detail">
+                <div class="modal-label">Area</div>
+                <div class="modal-value">${area}</div>
+            </div>
+            <div class="modal-detail">
+                <div class="modal-label">Details</div>
+                <div class="modal-value">${note}</div>
+            </div>
+        `;
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('detailModal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('detailModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
         }
+    }
+</script>
 
-        function getStrictKey(locationField, activityField, dateKey) {
-            let combined = ((locationField || "") + " " + (activityField || "")).toLowerCase();
-            let dateStr = dateKey ? dateKey.toLowerCase() : "";
-            
-            if (combined.includes("naha airport")) return "naha airport";
-            if (combined.includes("bee rent")) return "bee rent chatan";
-            if (combined.includes("churaumi") || combined.includes("aquarium")) return "churaumi aquarium";
-            if (combined.includes("kouri")) return "kouri island";
-            if (combined.includes("manzamo")) return "cape manzamo";
-            if (combined.includes("aeon")) return "aeon mall";
-            if (combined.includes("makishi")) return "makishi public market";
-            if (combined.includes("tsuboya") || combined.includes("pottery")) return "tsuboya pottery";
-            if (combined.includes("naminoue")) return "naminoue shrine";
-            if (combined.includes("kokusai")) return "kokusai street";
-            if (combined.includes("american") || combined.includes("village")) return "american village";
-            if (combined.includes("lanyang") || combined.includes("museum")) return "lanyang museum";
-            if (combined.includes("jiufen")) return "jiufen old street";
-            if (combined.includes("raohe")) return "raohe night market";
-            if (combined.includes("zhang mei") || combined.includes("ama")) return "zhang mei ama farm";
-            if (combined.includes("taipei airport") || combined.includes("taoyuan")) return "taipei airport";
-            if (combined.includes("ximending") || combined.includes("shimen")) return "ximending";
-            if (combined.includes("carrefour") || combined.includes("guilin")) return "carrefour guilin";
-            if (combined.includes("starbeary")) return "starbeary";
-            if (combined.includes("tiaoshi")) return "tiaoshi";
-            if (combined.includes("chengzhong")) return "chengzhong market";
-            
-            if (combined.includes("relax") || dateStr.includes("may 30") || dateStr.includes("may 31") || dateStr.includes("june 01")) {
-                return "hotel relax 3"; 
-            }
-            if (combined.includes("hotel") || combined.includes("stay") || combined.includes("chatan")) {
-                return "hotel chatan";
-            }
-            return "";
-        }
-
-        function calculateAutomaticMinutes(coord1, coord2) {
-            if (!coord1 || !coord2) return null;
-            
-            const R = 6371; 
-            const dLat = (coord2[0] - coord1[0]) * Math.PI / 180;
-            const dLon = (coord2[1] - coord1[1]) * Math.PI / 180;
-            
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(coord1[0] * Math.PI / 180) * Math.cos(coord2[0] * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const straightDistanceKm = R * c;
-            
-            let roadDrivingTimeMins = Math.round(straightDistanceKm * 1.65);
-            if (roadDrivingTimeMins < 5) return 5; 
-            return roadDrivingTimeMins;
-        }
-
-        function isPureTransitLeg(activityText) {
-            let text = (activityText || "").toLowerCase();
-            return text.includes("transfer") || text.includes("flight") || text.includes("private transfer") || text.includes("check-in");
-        }
-
-        function showSummaryView() {
-            document.getElementById('detail-view').classList.add('hidden-view');
-            document.getElementById('summary-view').classList.remove('hidden-view');
-        }
-
-        function showDetailView(dateKey) {
-            document.getElementById('summary-view').classList.add('hidden-view');
-            document.getElementById('detail-view').classList.remove('hidden-view');
-            document.getElementById('nav-date-badge').innerText = dateKey;
-
-            const container = document.getElementById('detail-timeline-container');
-            container.innerHTML = "";
-            activeMarkers.forEach(m => map.removeLayer(m));
-            activeMarkers = [];
-
-            const dayRows = masterGroupedData[dateKey] || [];
-            
-            for (let i = 0; i < dayRows.length; i++) {
-                const row = dayRows[i];
-                const nextRow = dayRows[i + 1] || null;
-
-                const time = row.Time || "";
-                const activity = row.Activity || row.Location || "";
-                const note = row.Note || "";
-                
-                const currentKey = getStrictKey(row.Location, row.Activity, dateKey);
-                const intel = strictIntelligenceCatalog[currentKey];
-
-                let detailsHtml = "";
-                
-                if (isPureTransitLeg(activity)) {
-                    detailsHtml = `
-                        <div class="mt-2 pt-1 flex items-center gap-1.5 text-slate-400 text-[10px] font-bold tracking-tight">
-                            <i class="fa-solid fa-van-shuttle animate-bounce text-orange-400"></i>
-                            <span>Transit activity leg — hidden local recommendations layout.</span>
-                        </div>
-                    `;
-                } else if (intel) {
-                    detailsHtml = `
-                        <div class="mt-2 pt-2 border-t border-orange-50 space-y-2 text-[11px]">
-                            <div class="bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/20 space-y-1">
-                                <p class="font-black text-[10px] uppercase tracking-wider text-amber-700"><i class="fa-solid fa-star mr-1"></i> 🏆 Location Highlight Features:</p>
-                                <ul class="list-none space-y-1 text-slate-700 font-bold pl-1">
-                                    <li><i class="fa-solid fa-circle-check text-amber-500 text-[8px] mr-1"></i> ${intel.highlights[0] || "Attraction feature point"}</li>
-                                    <li><i class="fa-solid fa-circle-check text-amber-500 text-[8px] mr-1"></i> ${intel.highlights[1] || "Scenic viewpoint option"}</li>
-                                    <li><i class="fa-solid fa-circle-check text-amber-500 text-[8px] mr-1"></i> ${intel.highlights[2] || "Local exploratory tracking"}</li>
-                                </ul>
-                            </div>
-                            <div class="bg-orange-50/30 p-2.5 rounded-xl border border-orange-100/20 space-y-1">
-                                <p class="font-black text-[10px] uppercase tracking-wider text-orange-600"><i class="fa-solid fa-utensils mr-1"></i> Top 3 Local Dishes:</p>
-                                <ul class="list-disc list-inside space-y-0.5 text-slate-600 font-bold">
-                                    <li>${intel.food[0] || "Regional specialty"}</li>
-                                    <li>${intel.food[1] || "Traditional comfort side"}</li>
-                                    <li>${intel.food[2] || "Seasonal street snack"}</li>
-                                </ul>
-                            </div>
-                            <div class="flex items-center gap-1.5 text-slate-400 font-medium pt-1 px-1 text-[10px]">
-                                <i class="fa-regular fa-clock"></i> <span>Official Operating Hours: ${intel.hours}</span>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                let currentTransitHtml = "";
-                if (nextRow) {
-                    const nextKey = getStrictKey(nextRow.Location, nextRow.Activity, dateKey);
-                    let driveTimeText = "";
-
-                    if (currentKey === "naha airport" && nextKey === "taipei airport") {
-                        driveTimeText = "Approx. 1 hour 35 mins International Flight (OKA ✈️ TPE)";
-                        currentTransitHtml = `
-                            <div class="my-2 ml-6 pl-4 border-l-2 border-dashed border-sky-400 flex items-center gap-2 text-sky-600 font-bold text-[10px]">
-                                <i class="fa-solid fa-plane-departure animate-pulse text-sky-500"></i>
-                                <span>${driveTimeText}</span>
-                            </div>
-                        `;
-                    } else {
-                        let p1 = locationCoordinates[currentKey];
-                        let p2 = locationCoordinates[nextKey];
-                        let autoCalculatedMinutes = calculateAutomaticMinutes(p1, p2);
-
-                        if (autoCalculatedMinutes) {
-                            if (autoCalculatedMinutes > 55) {
-                                let hrs = Math.floor(autoCalculatedMinutes / 60);
-                                let mins = autoCalculatedMinutes % 60;
-                                driveTimeText = `${hrs} hour ${mins} mins automatic navigation tracking route`;
-                            } else {
-                                driveTimeText = `${autoCalculatedMinutes} mins automated driving leg time`;
-                            }
-                        } else {
-                            driveTimeText = "15 - 35 mins estimated scenic island transit lane";
-                        }
-
-                        currentTransitHtml = `
-                            <div class="my-2 ml-6 pl-4 border-l-2 border-dashed border-teal-300 flex items-center gap-2 text-teal-600 font-bold text-[10px]">
-                                <i class="fa-solid fa-car-side animate-pulse text-teal-500"></i>
-                                <span>Next Leg Transit: ${driveTimeText}</span>
-                            </div>
-                        `;
-                    }
-                }
-
-                const block = document.createElement('div');
-                block.className = "bg-white p-4 rounded-2xl border border-orange-100/50 shadow-sm space-y-3 relative";
-                
-                block.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-black text-orange-600 bg-orange-50 px-2.5 py-1 rounded-lg">${time}</span>
-                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded"><i class="fa-solid fa-map-marker-alt"></i> ${currentKey ? currentKey.toUpperCase() : "ADVENTURE STOP"}</span>
-                    </div>
-                    <h3 class="font-black text-slate-900 text-sm tracking-tight">${activity}</h3>
-                    ${note ? `<p class="text-[11px] text-amber-950 bg-amber-100/60 px-2.5 py-2 rounded-xl font-medium"><strong>⚠️ Note:</strong> ${note}</p>` : ""}
-                    ${detailsHtml}
-                `;
-                
-                container.appendChild(block);
-                if (currentTransitHtml !== "") {
-                    const transitWrapper = document.createElement('div');
-                    transitWrapper.innerHTML = currentTransitHtml;
-                    container.appendChild(transitWrapper);
-                }
-
-                let mappingKey = currentKey;
-                if (locationCoordinates[mappingKey]) {
-                    const marker = L.marker(locationCoordinates[mappingKey]).addTo(map).bindPopup(`<b>${activity}</b>`);
-                    activeMarkers.push(marker);
-                }
-            }
-
-            setTimeout(() => {
-                map.invalidateSize();
-                if (activeMarkers.length > 0) {
-                    var group = new L.featureGroup(activeMarkers);
-                    map.fitBounds(group.getBounds().pad(0.2));
-                }
-            }, 200);
-        }
-    </script>
 </body>
 </html>
