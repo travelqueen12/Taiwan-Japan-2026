@@ -6,6 +6,10 @@
     <title>Family Trip: Okinawa & Taipei</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased pb-12">
 
@@ -13,10 +17,16 @@
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-compass text-2xl text-amber-300"></i>
-                <h1 class="font-bold text-lg tracking-wide">Family Tour 2026</h1>
+                <h1 class="font-bold text-lg tracking-wide" id="app-title">Family Tour 2026</h1>
             </div>
-            <div class="bg-teal-800/50 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
-                <span id="current-date-badge">May 27</span>
+            
+            <div class="flex items-center space-x-2">
+                <button id="lang-toggle" onclick="toggleLanguage()" class="bg-amber-400 hover:bg-amber-500 text-teal-900 px-2.5 py-1 rounded-lg text-xs font-bold shadow-xs transition-all active:scale-95">
+                    中文
+                </button>
+                <div class="bg-teal-800/50 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                    <span id="current-date-badge">May 22</span>
+                </div>
             </div>
         </div>
     </header>
@@ -25,27 +35,32 @@
 
         <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
             <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2">
+                <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2" id="weather-title">
                     <i class="fa-solid fa-cloud-sun text-teal-600"></i> Live Location Weather
                 </h2>
                 <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Live</span>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-slate-500 uppercase">Okinawa</p>
-                        <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">27°C</p>
-                        <p class="text-xs text-slate-600 font-medium" id="oki-cond">Partly Cloudy</p>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 p-2.5 rounded-xl border border-purple-100 flex flex-col justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase id-osaka">Osaka</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="text-lg font-black text-slate-800" id="osa-temp">21°C</span>
+                        <i class="fa-solid fa-sun text-amber-500 text-lg"></i>
                     </div>
-                    <i class="fa-solid fa-cloud-sun text-3xl text-amber-400"></i>
                 </div>
-                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-3 rounded-xl border border-emerald-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-slate-500 uppercase">Taipei</p>
-                        <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">25°C</p>
-                        <p class="text-xs text-slate-600 font-medium" id="tpe-cond">Passing Shower</p>
+                <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-2.5 rounded-xl border border-sky-100 flex flex-col justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase id-okinawa">Okinawa</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="text-lg font-black text-slate-800" id="oki-temp">27°C</span>
+                        <i class="fa-solid fa-cloud-sun text-amber-400 text-lg"></i>
                     </div>
-                    <i class="fa-solid fa-cloud-showers-heavy text-3xl text-sky-400"></i>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-2.5 rounded-xl border border-emerald-100 flex flex-col justify-between">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase id-taipei">Taipei</p>
+                    <div class="flex items-center justify-between mt-1">
+                        <span class="text-lg font-black text-slate-800" id="tpe-temp">25°C</span>
+                        <i class="fa-solid fa-cloud-showers-heavy text-sky-400 text-lg"></i>
+                    </div>
                 </div>
             </div>
         </section>
@@ -61,79 +76,409 @@
     </main>
 
     <script>
-        // Consolidated structured data parsed from your trip blueprints
+        // Current Language State: 'en' or 'zh'
+        let currentLang = 'en';
+
+        const labelTranslations = {
+            en: {
+                title: "Family Tour 2026",
+                weather: "Live Location Weather",
+                live: "Live",
+                updated: "Updated",
+                note: "Senior & Logistics Note",
+                food: "Food Suggestion",
+                alert: "Live Show Alert",
+                osaka: "Osaka",
+                okinawa: "Okinawa",
+                taipei: "Taipei"
+            },
+            zh: {
+                title: "2026 家族温馨之旅",
+                weather: "实时目的地天气",
+                live: "实时更新",
+                updated: "更新于",
+                note: "长辈及行程贴心提示",
+                food: "推荐附近美食",
+                alert: "剧场表演时间提醒",
+                osaka: "大阪",
+                okinawa: "冲绳",
+                taipei: "台北"
+            }
+        };
+
         const tripData = {
-            "May 27": {
-                title: "Day 1: Arrival Day",
+            "May 22": {
+                title: { en: "May 22 (Fri) - Popo's Osaka Flight", zh: "5月22日 (周五) - 婆婆出发大阪" },
                 events: [
-                    { time: "20:50", activity: "Arrive Naha Airport", location: "Naha Airport", note: "Immigration & Customs. Look out for the chartered transport van driver directly outside arrivals.", food: "Convenience store quick grabs, A&W Burger (Airport Branch - if still open)." },
-                    { time: "22:30", activity: "Hotel Check-in & Rest", location: "Hotel Chatan by Sunrest Resort", note: "Late snack or night stroll near American Village if energy permits.", food: "Late night Izakayas or Lawson/FamilyMart nearby." }
+                    { 
+                        time: "18:30", 
+                        activity: { en: "Arrive at Airport", zh: "抵达机场" }, 
+                        location: { en: "Langkawi Airport", zh: "兰卡威机场" }, 
+                        note: { en: "Popo arriving from Langkawi to catch transit.", zh: "婆婆从兰卡威抵达，准备转机。" }, 
+                        food: { en: "Light airport snacks.", zh: "机场简餐及小吃。" } 
+                    },
+                    { 
+                        time: "22:25", 
+                        activity: { en: "Flight to Osaka Departure ✈️", zh: "起飞前往大阪 ✈️" }, 
+                        location: { en: "Kuala Lumpur to Osaka", zh: "吉隆坡飞往大阪" }, 
+                        note: { en: "Flight includes Popo, mei mei, mama.", zh: "乘机人员包括：婆婆、妹妹、妈妈。" }, 
+                        food: { en: "In-flight meal service.", zh: "飞机提供机上餐食。" } 
+                    }
+                ]
+            },
+            "May 23": {
+                title: { en: "May 23 (Sat) - Arrive Osaka", zh: "5月23日 (周六) - 抵达大阪" },
+                events: [
+                    { 
+                        time: "05:45", 
+                        activity: { en: "Landed at Osaka", zh: "顺利降落大阪" }, 
+                        location: { en: "Kansai International Airport", zh: "关西国际机场" }, 
+                        note: { en: "Head out toward Jinzhe and Wakayama exploring routes.", zh: "办理出关，包车前往临空城、和歌山方向游玩。" }, 
+                        food: { en: "Local Japanese airport breakfast, warm udon.", zh: "机场享用热腾腾的日式乌冬面早餐。" } 
+                    }
+                ]
+            },
+            "May 24": {
+                title: { en: "May 24 (Sun) - Osaka Sightseeing", zh: "5月24日 (周日) - 大阪市内游" },
+                events: [
+                    { 
+                        time: "All Day", 
+                        activity: { en: "Explore Osaka City", zh: "轻松游览大阪市内" }, 
+                        location: { en: "Osaka central hubs", zh: "大阪市中心区域" }, 
+                        note: { en: "City walking tour, keeping a gentle, relaxed pace for family members.", zh: "市内经典打卡，全程放慢脚步，走走停停，适合长辈体力。" }, 
+                        food: { en: "Takoyaki, Osaka savory pancakes (Okonomiyaki).", zh: "特色章鱼烧、地道大阪烧（御好烧）。" } 
+                    }
+                ]
+            },
+            "May 25": {
+                title: { en: "May 25 (Mon) - Universal Studios Japan", zh: "5月25日 (周一) - 日本环球影城" },
+                events: [
+                    { 
+                        time: "All Day", 
+                        activity: { en: "Universal Studios Japan (USJ) 🏰", zh: "日本环球影城一日游 (USJ) 🏰" }, 
+                        location: { en: "USJ theme park", zh: "环球影城" }, 
+                        note: { en: "Take dynamic rest breaks inside thematic dining spaces to maintain stamina.", zh: "进入园区后多休息，可以在主题餐厅内边坐边休息以保持长辈体力。" }, 
+                        food: { en: "Park signature themed sets, popcorn snacks.", zh: "园区特色主题套餐、可爱爆米花小吃。" } 
+                    }
+                ]
+            },
+            "May 26": {
+                title: { en: "May 26 (Tue) - Final Day in Osaka", zh: "5月26日 (周二) - 大阪购物与打包" },
+                events: [
+                    { 
+                        time: "All Day", 
+                        activity: { en: "Shopping & Leisure", zh: "休闲购物与伴手礼" }, 
+                        location: { en: "Osaka central shopping streets", zh: "大阪市中心商圈" }, 
+                        note: { en: "Easy packing and prepping day before heading south tomorrow.", zh: "轻松的一天，买齐伴手礼，收拾行李，为明天飞往冲绳做准备。" }, 
+                        food: { en: "Local hot ramen bowls, fresh sushi plates.", zh: "尝一碗地道的日本拉面，或者新鲜寿司拼盘。" } 
+                    }
+                ]
+            },
+            "May 27": {
+                title: { en: "May 27 (Wed) - Group Arrival in Okinawa", zh: "5月27日 (周三) - 冲绳大集合！" },
+                events: [
+                    { 
+                        time: "09:15", 
+                        activity: { en: "Main Group Departure ✈️", zh: "大部队大马起飞 ✈️" }, 
+                        location: { en: "KLIA to Okinawa", zh: "吉隆坡飞往冲绳" }, 
+                        note: { en: "Flight includes ahpa, boy, derrick, ken.", zh: "乘机人员包括：爸爸、阿Boy、Derrick、Ken。" }, 
+                        food: { en: "In-flight catering meals.", zh: "享用马航机上餐食。" } 
+                    },
+                    { 
+                        time: "16:20", 
+                        activity: { en: "Osaka Group Landing", zh: "大阪小分队飞抵冲绳", }, 
+                        location: { en: "Osaka to Okinawa Flight", zh: "大阪飞往冲绳" }, 
+                        note: { en: "Popo's group arrives safely in tropical Okinawa.", zh: "婆婆、妈妈一行人率先抵达美丽的冲绳那霸机场。" }, 
+                        food: { en: "Airport cafe break snacks.", zh: "在机场喝杯下午茶或吃点轻食。" } 
+                    },
+                    { 
+                        time: "20:50", 
+                        activity: { en: "Boys Arrive Okinawa", zh: "男生大部队抵达冲绳" }, 
+                        location: { en: "Naha Airport Arrivals", zh: "那霸机场入境大厅" }, 
+                        note: { en: "Immigration & Customs. Look out for the chartered transport van driver directly outside arrivals.", zh: "办理完入境手续后，直接在接机大厅寻找我们安排的包车司机。" }, 
+                        food: { en: "Convenience store quick grabs, A&W Burger (Airport Branch).", zh: "冲绳特色 A&W 橙汁汉堡（机场店）或全家/罗森便利店暖胃小吃。" } 
+                    },
+                    { 
+                        time: "22:30", 
+                        activity: { en: "Hotel Check-in & Rest", zh: "办理酒店入住与休息" }, 
+                        location: { en: "Hotel Chatan by Sunrest Resort", zh: "北谷太阳之息度假酒店" }, 
+                        note: { en: "Late snack or night stroll near American Village if energy permits.", zh: "办理入住并安顿行李。如果精力充沛，可以下楼在附近的美国村吹吹海风。" }, 
+                        food: { en: "Late night local Izakayas or Lawson/FamilyMart nearby.", zh: "酒店楼下的 24小时便利店或深夜居酒屋。" } 
+                    }
                 ]
             },
             "May 28": {
-                title: "Day 2: Mid-North Scenery & Shopping",
+                title: { en: "May 28 (Thu) - Churaumi Aquarium & North Shore", zh: "5月28日 (周四) - 中北部绝景 + 水族馆" },
                 events: [
-                    { time: "09:30", activity: "Car Pickup & Breakfast", location: "Bee Rent Chatan", note: "Formal car rental pickup. Ensure all group credentials are ready.", food: "Local bakery or café options inside American Village." },
-                    { time: "11:00", activity: "Okinawa Churaumi Aquarium 🐋", location: "Motobu Peninsula", note: "Fully indoor main exhibition area—ideal climate management for seniors. Don't skip the giant Kuroshio Sea tank.", shows: "Dolphin Show (Okichan Theater) runs at 11:30 & 13:00. Plan your internal path accordingly!", food: "Inocean Cafe (next to the main tank), Ocean Blue Restaurant." },
-                    { time: "13:30", activity: "Kouri Island & Sea Bridge 🌉", location: "Kouri Island", note: "Scenic coastal crossing. Enjoy the vibrant turquoise blue seascape safely from the vehicle or brief photo stops.", food: "Kouri Shrimp Truck (Famous garlic shrimp), local sea salt ice cream." },
-                    { time: "15:30", activity: "Cape Manzamo", location: "Onna Village", note: "Flat paved walking trail to see the signature elephant rock structure. Take advantage of the new AC-equipped rest facility.", food: "Local purple sweet potato tarts, brown sugar bubble milk tea at the visitor center." },
-                    { time: "17:00", activity: "AEON Mall Okinawa Rycom 🛍️", location: "Kitanakagusuku", note: "Massive retail footprint. Pro-Tip: Grab an integrated shopping seat cart for seniors immediately inside the main entrance to minimize standing strain.", food: "Comprehensive Food Court: Local Okinawa Soba, Gyoza, and diverse global selections." },
-                    { time: "20:00", activity: "Return to Base", location: "Hotel Chatan by Sunrest Resort", note: "Short, low-stress drive back to the accommodation quarters.", food: "Comforting Hot Pot or local Izakaya dinners adjacent to Chatan." }
+                    { 
+                        time: "07:30", 
+                        activity: { en: "Leave Hotel for Breakfast", zh: "晨起集合并享用早餐" }, 
+                        location: { en: "Chatan Area", zh: "美国村北谷区域" }, 
+                        note: { en: "Wake up fresh and gather the group for the morning start.", zh: "长辈睡到自然醒，全家一起出发，开启自驾第一天。" }, 
+                        food: { en: "Local breakfast cafe options inside American Village.", zh: "美国村海边西式早茶或日式早餐套餐。" } 
+                    },
+                    { 
+                        time: "10:00", 
+                        activity: { en: "Okinawa Churaumi Aquarium 🐋", zh: "美丽海水族馆 🐋" }, 
+                        location: { en: "Motobu Peninsula", zh: "本部半岛" }, 
+                        note: { en: "Fully indoor main exhibition area—ideal climate management for seniors. Don't skip the giant Kuroshio Sea tank to view whale sharks.", zh: "【长辈最舒适】核心展区全室内空调，非常凉爽，走路平坦。别错过看巨大的「黑潮之海」鲸鲨大水槽。" }, 
+                        shows: { en: "Dolphin Show (Okichan Theater) runs at 11:30 & 13:00. Plan your internal path accordingly!", zh: "【海豚表演时间表】主剧场表演时间为 11:30 和 13:00，请提前 15 分钟过去选个好位置！" }, 
+                        food: { en: "Inocean Cafe (next to the main tank), Ocean Blue Restaurant.", zh: "大水槽旁的 Ocean Blue 咖啡厅，可以一边看鲸鲨游动一边吃饭。" } 
+                    },
+                    { 
+                        time: "14:30", 
+                        activity: { en: "Kouri Island & Sea Bridge 🌉", zh: "古宇利岛 + 跨海大桥 🌉" }, 
+                        location: { en: "Kouri Island", zh: "古宇利岛" }, 
+                        note: { en: "Scenic coastal crossing. Enjoy the vibrant views safely from the vehicle or brief photo stops near the bridge.", zh: "超美的自驾路线。长辈可以舒舒服服坐在车里欣赏两边 Tiffany 蓝的清澈海景，车开到桥头可下车拍照。" }, 
+                        food: { en: "Kouri Shrimp Truck (Famous garlic shrimp), local sea salt ice cream.", zh: "全日本最火的 Kouri 虾米餐车（招牌蒜香虾饭），以及冲绳特产海盐冰淇淋。" } 
+                    },
+                    { 
+                        time: "16:00", 
+                        activity: { en: "Cape Manzamo Visit", zh: "万座毛景区（象鼻岩）" }, 
+                        location: { en: "Onna Village", zh: "恩纳村" }, 
+                        note: { en: "Flat paved walking trail to see the signature elephant rock structure. Take advantage of the new AC-equipped rest facility buildings.", zh: "步道经过全面修缮，全平路，非常适合长辈漫步散心。新建的游客中心有很足的空调、电梯和舒适座椅。" }, 
+                        food: { en: "Local purple sweet potato tarts, brown sugar bubble milk tea at the visitor center.", zh: "游客中心内售卖的纯正冲绳御菓子御殿紫薯挞、冲绳黑糖奶茶。" } 
+                    },
+                    { 
+                        time: "17:30", 
+                        activity: { en: "AEON Mall Okinawa Rycom 🛍️", zh: "永旺梦乐城 AEON Mall 🛍️" }, 
+                        location: { en: "Kitanakagusuku", zh: "北中城村" }, 
+                        note: { en: "Massive retail footprint. Pro-Tip: Grab an integrated shopping seat cart for seniors immediately inside the main entrance to minimize standing strain.", zh: "【贴心提示】全冲绳最大的室内商场。进门请先为长辈推一辆「自带舒适座椅的婴儿/老人购物车」，免去长辈走路劳累。药妆伴手礼一站买齐。" }, 
+                        food: { en: "Comprehensive Food Court: Local Okinawa Soba, Gyoza, and diverse global selections.", zh: "商场大型美食广场：热腾腾的冲绳传统荞麦面 (Okinawa Soba)、煎饺、章鱼烧。" } 
+                    },
+                    { 
+                        time: "20:30", 
+                        activity: { en: "Return to Resort Base", zh: "返回酒店休息" }, 
+                        location: { en: "Hotel Chatan by Sunrest Resort", zh: "北谷酒店" }, 
+                        note: { en: "Short, low-stress 15-minute drive back to our accommodation quarters.", zh: "买完东西直接丢进车后备箱，轻松开车 15 分钟返回北谷温馨的家。" }, 
+                        food: { en: "Comforting Hot Pot or local Izakaya dinners adjacent to Chatan.", zh: "在酒店附近吃个暖和的日式小火锅，或传统琉球料理。" } 
+                    }
                 ]
             },
             "May 29": {
-                title: "Day 3: Southern Culture & Historic Alleys",
+                title: { en: "May 29 (Fri) - Southern Culture & Kimono Experience", zh: "5月29日 (周五) - 南部文化 + 传统服饰体验" },
                 events: [
-                    { time: "09:30", activity: "Check Out & Depart South", location: "Chatan to Naha Route", note: "Smooth transition packing baggage into the vehicle trunks.", food: "Quick on-the-go Japanese rice balls (Onigiri) or standard local cafe stops." },
-                    { time: "10:30", activity: "Naminoue Shrine ⛩️", location: "Naha Cliffside", note: "Beautiful iconic coastal cliff views. Dedicated vehicle parking area is situated extremely close to the shrine main grounds to eliminate steep uphill walking.", food: "Traditional mochi treats and chilled local teas near the shrine plaza." },
-                    { time: "11:30", activity: "Makishi Public Market 🍱", location: "Naha Central (Kokusai)", note: "Traditional indoor multi-level marketplace setup. Vibrant local culinary scene showcasing fresh, custom-cooked seafood plates.", food: "Okinawa Kitchen (highly rated local delicacies), customizable fresh sashimi stalls on the ground floor." },
-                    { time: "13:30", activity: "Kokusai Street Exploration", location: "Naha Downtown", note: "Stick primarily to the flat central thoroughfare. Take frequent air-conditioned cafe breaks to maximize physical comfort.", food: "Blue Seal Ice Cream shops, local Okinawa brown sugar treats, iced matchas." },
-                    { time: "15:30", activity: "Tsuboya Pottery Street", location: "Naha Historical Quarter", note: "Uniquely peaceful stone-paved old street. Exceptional showcase of artisanal Okinawan ceramic crafts. Low walking pace.", food: "Quaint traditional hidden tearooms offering iced Okinawan jasmine tea (Sanpin-cha)." },
-                    { time: "18:00", activity: "Refuel & Return Car", location: "Bee Rent Chatan Terminal", note: "Ensure fuel tanks are topped up fully prior to drop-off window limit.", food: "Farewell Okinawa Dinner feast inside the American Village coastal hub." }
+                    { 
+                        time: "08:00", 
+                        activity: { en: "Depart Hotel heading South", zh: "退房并驾车南下" }, 
+                        location: { en: "Chatan to Naha Route", zh: "从北谷开往那霸" }, 
+                        note: { en: "Pack bags smoothly into vehicle trunks. Headed down toward Naha.", zh: "收拾好行李全部放进后备箱。今天主要游玩那霸南部区域。" }, 
+                        food: { en: "Quick on-the-go Japanese rice rolls (Onigiri) or standard local cafe stops.", zh: "路过便利店买几个海苔午餐肉饭团 (Onigiri) 或热咖啡。" } 
+                    },
+                    { 
+                        time: "10:00", 
+                        activity: { en: "Ryoshu Costume at Chura Bijin 👘", zh: "琉装美人传统服饰体验 👘" }, 
+                        location: { en: "Naha Experience Store", zh: "那霸美之美人店" }, 
+                        note: { en: "Traditional costume dress up. Dedicated close vehicle parking to eliminate steep walking.", zh: "全家一起换上冲绳特色的琉球传统服饰。门前有专用停车场，不需要长辈多走路。" }, 
+                        food: { en: "Traditional tea snacks nearby.", zh: "品尝体验店提供的冰镇红豆汤或宇治金时小点心。" } 
+                    },
+                    { 
+                        time: "11:00", 
+                        activity: { en: "Naminoue Shrine ⛩️", zh: "波上宫悬崖神社 ⛩️" }, 
+                        location: { en: "Naha Cliffside View", zh: "那霸市" }, 
+                        note: { en: "Beautiful iconic coastal cliff views. Great spot to take memorable group family photos.", zh: "冲绳最灵验、最出名的海边神社。全家在这里拍一套美美的传统服装合影大合照 (打卡胜地)。" }, 
+                        food: { en: "Traditional sweet mochi treats.", zh: "神社旁的日式手作红豆大福、年糕。" } 
+                    },
+                    { 
+                        time: "13:30", 
+                        activity: { en: "Kokusai Street Exploration", zh: "国际通老街漫步" }, 
+                        location: { en: "Naha Downtown", zh: "那霸市中心" }, 
+                        note: { en: "Stick primarily to the flat central thoroughfare. Walk a short distance to buy small gifts and souvenirs.", zh: "整条街非常平坦。长辈可以慢悠悠闲逛，随手买些小纪念品，走累了到处都是有空调的店面。" }, 
+                        food: { en: "Blue Seal Ice Cream shops, local Okinawa brown sugar treats, iced matchas.", zh: "著名的 Blue Seal 冰淇淋（强烈推荐冲绳盐饼干味）、冰镇香片茶。" } 
+                    },
+                    { 
+                        time: "14:30", 
+                        activity: { en: "Makishi Public Market 🍱", zone: "第一牧志公设市场" }, 
+                        location: { en: "Naha Central Market", zh: "那霸老城市场" }, 
+                        note: { en: "Traditional indoor multi-level marketplace setup. Vibrant local culinary scene showcasing fresh, custom-cooked seafood plates.", zh: "【全新翻新室内】全室内且有电梯，极干净。可以去一楼亲自挑选新鲜海鲜、大龙虾，然后直接上二楼找华人厨师现做现吃。" }, 
+                        food: { en: "Okinawa Kitchen (highly rated local delicacies), customizable fresh seafood stalls.", zh: "二楼传统老店：清蒸海鲜、大龙虾、刺身拼盘、夜光贝。" } 
+                    },
+                    { 
+                        time: "16:00", 
+                        activity: { en: "DFS Outlet Hub", zh: "DFS 环球免税店大厦" }, 
+                        location: { en: "Naha Shopping Zone", zh: "那霸新都心" }, 
+                        note: { en: "Premium retail window shopping options if time permits.", zh: "全室内大型免税商场，如果有时间，可以让长辈坐着歇脚，其他人随意逛逛。" }, 
+                        food: { en: "Chilled iced coffees or teas.", zh: "高级咖啡厅内的冰美式、热拿铁、千层蛋糕。" } 
+                    },
+                    { 
+                        time: "18:30", 
+                        activity: { en: "Refuel & Return Rental Car", zh: "还车前加满油" }, 
+                        location: { en: "Bee Rent Chatan Terminal", zh: "北谷还车点" }, 
+                        note: { en: "Ensure fuel tanks are topped up fully prior to drop-off window limit (Before 18:30/19:00).", zh: "【特别重要】还车截止时间是 18:30/19:00 之前，记得在租车点最后 1公里的加油站加满油，避免罚款。" }, 
+                        food: { en: "Pre-return snacks.", zh: "车里的小零食充饥。" } 
+                    },
+                    { 
+                        time: "19:00", 
+                        activity: { en: "Farewell Dinner at American Village", zh: "冲绳告别晚餐大餐" }, 
+                        location: { en: "American Village Coast", zh: "美国村海滨大堤" }, 
+                        note: { en: "Enjoy the beautiful sunset views near our hotel on our final night in Okinawa.", zh: "还完车后，全家来到海边落日餐厅。一边吹海风看绝美晚霞日落，一边吃大餐，庆祝冲绳段完美结束。" }, 
+                        food: { en: "Okinawan feast dinner party.", zh: "琉球本地顶级石垣牛烧肉、或者冲绳海鲜大餐。" } 
+                    }
                 ]
             },
             "May 30": {
-                title: "Day 4: Transit to Taipei + Yilan Tour",
+                title: { en: "May 30 (Sat) - Transit to Taipei & Yilan Tour", zh: "5月30日 (周六) - 飞往台北 + 宜兰包车一日游" },
                 events: [
-                    { time: "05:30", activity: "Early Airport Transfer", location: "Hotel Chatan ➔ Naha Airport", note: "Early check-out procedures. Keep passports easily accessible.", food: "Naha Airport breakfast lounges, standard local terminal bakeries." },
-                    { time: "08:00", activity: "Flight Departure", location: "Naha ➔ Taoyuan Int'l", note: "Relax and unwind during the short regional flight sector.", food: "In-flight meal service." },
-                    { time: "10:00", activity: "Luggage Drop-off", location: "Hotel Relax III (Taipei Main)", note: "Brief pitstop. Luggage stays safely inside the private charter vehicle trunk to ensure rapid departure toward Yilan county.", food: "Taipei Main Station local snack stalls, pork pepper buns." },
-                    { time: "11:30", activity: "Yilan Epicurean Lunch 🦆", location: "Silks Place Yilan", note: "Advanced reservation required. Legendary regional dining highlight.", food: "The famous multi-course Cherry Roasted Duck Feast (兰城晶英樱桃鸭)." },
-                    { time: "13:30", activity: "Lanyang Museum", location: "Yilan Coast", note: "A striking piece of modern structural architecture. Fully interior AC with extensive elevator installations servicing every floor.", food: "Museum ground-level café, local iced fruit teas." },
-                    { time: "15:00", activity: "Zhang Mei Ama’s Farm 🌾", location: "Yilan Farmstead", note: "Interactive animal experience feeding friendly Capybaras. Excellent opportunities for fun family photographs.", food: "Scallion pancakes made with fresh local Yilan Sanxing scallions." },
-                    { time: "17:30", activity: "Ximending Walk & Nightlife", location: "Taipei District", note: "Stroll along the historic Red House plaza. Smooth walking paths.", food: "Ay-Chung Flour-Rice Noodles, Hot Star Large Fried Chicken, local braised pork rice." },
-                    { time: "18:30", activity: "Carrefour Guilin Store", location: "Wanhua District", note: "One-stop destination for massive souvenir shopping hauls. Purchase goods and load them directly back into the charter vehicle.", food: "Carrefour internal bakery, Taiwanese fruit selections." }
+                    { 
+                        time: "05:30", 
+                        activity: { en: "Check Out & Airport Run", zh: "清晨退房，包车去机场" }, 
+                        location: { en: "Hotel Chatan ➔ Naha Airport", zh: "北谷酒店出发" }, 
+                        note: { en: "Early flight preparation. Keep passports easily accessible.", zh: "早上大家辛苦一下起个早，护照和马航机票订单提前拿在手上。" }, 
+                        food: { en: "Naha Airport breakfast lounges or quick terminal bakeries.", zh: "那霸机场航站楼里的热咖啡、牛角包早餐。" } 
+                    },
+                    { 
+                        time: "08:00", 
+                        activity: { en: "Flight Departure ✈️", zh: "飞机起飞 ✈️" }, 
+                        location: { en: "Naha ➔ Taoyuan Int'l", zh: "冲绳那霸飞往台北桃园" }, 
+                        note: { en: "Relax and unwind during the short regional flight sector.", zh: "飞行时间非常短，长辈可以在飞机上安稳睡个回笼觉。" }, 
+                        food: { en: "In-flight morning snacks.", zh: "马航提供的美味机上点心。" } 
+                    },
+                    { 
+                        time: "08:45", 
+                        activity: { en: "Arrive Taoyuan Airport", zh: "抵达台北桃园机场" }, 
+                        location: { en: "Terminal 1 or 2 Arrivals", zh: "第一/第二航站楼接机大厅" }, 
+                        note: { en: "Our dedicated private charter driver meets the family at the main Arrival Hall.", zh: "台湾全程专属大包车司机已经在接机大厅举牌等候，出了大门直接上车，不用推行李受累。" }, 
+                        food: { en: "Freshly brewed Taiwanese milk tea drinks.", zh: "司机贴心准备的台湾本土热正宗珍珠奶茶。" } 
+                    },
+                    { 
+                        time: "10:00", 
+                        activity: { en: "Hotel Relax III Pitstop", zh: "台北旅馆 丢行李小站" }, 
+                        location: { en: "Taipei Main Area", zh: "台北车站 旅乐序三馆" }, 
+                        note: { en: "Quick luggage stop. Keep all suitcases inside the car boot so we can head straight to Yilan county.", zh: "到旅馆柜台快速寄存好行李。人不需要下车折腾，大件行李留在包车尾箱，咱们直接出发去宜兰！" }, 
+                        food: { en: "Station pork pepper buns.", zh: "顺手买几个台北车站招牌香脆胡椒饼车上吃。" } 
+                    },
+                    { 
+                        time: "13:30", 
+                        activity: { en: "Red Lantern Roast Duck Lunch 🦆", zh: "红楼樱桃烤鸭超级大餐 🦆" }, 
+                        location: { en: "Silks Place Yilan", zh: "兰城晶英酒店红楼中餐厅" }, 
+                        note: { en: "Advanced group reservation required. Legendary multi-course cherry roasted duck feast.", zh: "【重量级美食】全台湾最出名的樱桃鸭五吃！已经提前订好桌，长辈坐下就能直接大饱口福。" }, 
+                        food: { en: "Famed Yilan Cherry Roasted Duck multi-course feast.", zh: "招牌樱桃烤鸭、烤鸭握寿司、皮脆肉嫩，极力推荐！" } 
+                    },
+                    { 
+                        time: "15:00", 
+                        activity: { en: "Zhang Mei Ama’s Farm 🌾", zh: "张美阿嬷农场 🌾" }, 
+                        location: { en: "Yilan Farmstead", zh: "宜兰县" }, 
+                        note: { en: "Interactive animal experience feeding friendly Capybaras. Great for fun family photos.", zh: "超级治愈的日式农场。平地很好走，可以亲手喂超级可爱的水豚君、草泥马，很适合全家拍开心的照片。" }, 
+                        food: { en: "Scallion pancakes made with fresh local Yilan Sanxing scallions.", zh: "凭门票免费兑换的宜兰特产：现炸三星葱油饼、红豆饼。" } 
+                    },
+                    { 
+                        time: "17:30", 
+                        activity: { en: "Luodong Night Market", zh: "罗东夜市大扫街" }, 
+                        location: { en: "Yilan Night Market", zh: "宜兰罗东" }, 
+                        note: { en: "Walk comfortably near the market parameters, testing out iconic local snacks.", zh: "台湾夜市初体验！包车停在最近的街口，长辈可以手牵手慢慢走，小吃非常多。" }, 
+                        food: { en: "Local mutton herbal soup, scallion pastries, peanut ice cream rolls.", zh: "阿灶伯当归羊肉汤（暖胃首选）、三星葱饼、花生卷冰淇淋。" } 
+                    },
+                    { 
+                        time: "20:00", 
+                        activity: { en: "Check-in Hotel Relax III & Rest", zh: "回台北正式入住酒店休息" }, 
+                        location: { en: "Taipei Main Base", zh: "旅乐序三馆" }, 
+                        note: { en: "End of an active transition day. Relax inside comfy rooms.", zh: "包车直接送回台北酒店大门口。长辈回房间洗个热水澡，安稳睡个好觉。" }, 
+                        food: { en: "Late night local convenience store items.", zh: "台湾 7-11 关东煮、现烫茶叶蛋。" } 
+                    },
+                    { 
+                        time: "23:00", 
+                        activity: { en: "Late Night Activity", zh: "深夜小文娱 (年轻人可选)" }, 
+                        location: { en: "Starbeary Kiap Kiap", zh: "台北抓娃娃夹公仔街" }, 
+                        note: { en: "Optional arcade fun or doll catching games near the area.", zh: "【长辈可在房内休息】精力旺盛的年轻人可以下楼去体验台北夜生活抓娃娃机。" }, 
+                        food: { en: "Late night sweet dessert bowls.", zh: "路边深夜冰糖芋圆豆花汤。" } 
+                    }
                 ]
             },
             "May 31": {
-                title: "Day 5: Jiufen Old Town & Coastal Views",
+                title: { en: "May 31 (Sun) - Jiufen Flat Entry & Coastal Coffee", zh: "5月31日 (周日) - 九份山城高处平路直入 + 阴阳海咖啡厅" },
                 events: [
-                    { time: "08:30", activity: "Authentic Taiwanese Breakfast", location: "Taipei Main Area", note: "Indulge in legendary morning comfort culinary items.", food: "Fuhang Soy Milk (famed savory soy milk & deep-fried dough sticks) or Zhen Fang savory egg crepes." },
-                    { time: "10:15", activity: "Jiufen Old Street Historic Run", location: "Jiufen Hills", note: "CRITICAL DIRECTION: Instruct the charter driver to utilize the high-elevation drop-off point exclusively. This permits entering through a flat road and avoids the steep stairs.", food: "A-Gan-Yi Taro Balls, Lai Ah Po Taro Balls, traditional teahouses with sweeping mountain-to-sea vistas." },
-                    { time: "14:30", activity: "Tiaoshi Coast Coffee Break ☕", location: "Jinshan Coastal Road", note: "Stunning sweeping oceanfront rest break. Relax and snap family shots near the iconic coastal bus stop view.", food: "Freshly brewed specialty siphon coffees, local waffle plates, refreshing iced fruit sodas." },
-                    { time: "18:30", activity: "Raohe Street Night Market 🎪", location: "Songshan District", note: "CRITICAL ROUTING: Walk strictly in a single, continuous forward direction from end-to-end to prevent backtracking through crowds.", food: "Famed Michelin-recommended Black Pepper Pork Buns (Hujiao Bing), Herbal Pork Rib Soup." }
+                    { 
+                        time: "08:30", 
+                        activity: { en: "Authentic Taiwanese Breakfast", zh: "台式正宗古早味早餐" }, 
+                        location: { en: "Near Taipei Main Station", zh: "台北车站商圈" }, 
+                        note: { en: "Indulge in morning comfort culinary items.", zh: "热腾腾的古早味台式早点，让胃舒舒服服。" }, 
+                        food: { en: "Fuhang Soy Milk (Famous savory soy milk & deep-fried dough sticks) or Zhen Fang savory egg crepes.", zh: "大名鼎鼎的阜杭豆浆（咸豆浆、热油条）或真芳炭烤土豆吐司夹蛋饼。" } 
+                    },
+                    { 
+                        time: "10:15", 
+                        activity: { en: "Jiufen Old Street Historic Run", zh: "九份老街怀旧复古之旅" }, 
+                        location: { en: "Jiufen Hills", zh: "新北市瑞芳区" }, 
+                        note: { en: "CRITICAL DIRECTION: Instruct the charter driver to utilize the high-elevation drop-off point exclusively. This permits entering through a flat road and avoids the steep stairs.", zh: "【⚠️千万注意 别爬楼梯】一定要吩咐我们的包车司机直接开到「九份最高处的圣明宫平路路口」放我们下车。这样全家可以直接从上往下走平坦老街，完美【避开所有九份夺命大楼梯】，长辈完全不累！" }, 
+                        food: { en: "A-Gan-Yi Taro Balls, Lai Ah Po Taro Balls, traditional teahouses with mountain-to-sea vistas.", zh: "阿柑姨芋圆或赖阿婆芋圆（软糯香甜），找一家古董茶楼坐下看山海美景。" } 
+                    },
+                    { 
+                        time: "14:30", 
+                        activity: { en: "Ji Long Colourful Village Cafe ☕", zh: "基隆正滨渔港彩虹屋 + 海景咖啡 ☕" }, 
+                        location: { en: "Jinshan Coastal Road", zh: "基隆沿海公路" }, 
+                        note: { en: "Stunning oceanfront rest break. Relax, watch the sweeping sea view and take family photographs.", zh: "非常漂亮的彩色威尼斯意式渔港打卡点。全家找一家面对大海的冷气咖啡厅，舒舒服服坐着看海、聊天，拍全家福。" }, 
+                        food: { en: "Freshly brewed coffee, waffle plates, refreshing iced fruit sodas.", zh: "手冲单品咖啡、现烤外酥内软的水果华夫饼、冰镇气泡水。" } 
+                    },
+                    { 
+                        time: "17:30", 
+                        activity: { en: "Ximending + Carrefour Guilin 🛍️", zh: "西门町散步 + 家乐福大扫货 🛍️" }, 
+                        location: { en: "Songshan District / Wanhua", zh: "台北万华区" }, 
+                        note: { en: "One-way continuous forward walk to maximize energy. Perfect timing for massive souvenir gift shopping hauls.", zh: "带长辈开启单向不回头的顺畅步行路线。直接去桂林家乐福，这是全台湾最大最齐的特产手信中心。牛轧糖、凤梨酥买完包车直接接走，轻松省力。" }, 
+                        food: { en: "Famed Michelin-recommended Black Pepper Pork Buns (Hujiao Bing), Herbal Pork Rib Soup.", zh: "西门町阿宗面线、家乐福内的台湾本地新鲜大芒果、红肉火龙果、莲雾。" } 
+                    },
+                    { 
+                        time: "20:30", 
+                        activity: { en: "Return to Hotel Base", zh: "包车送返酒店" }, 
+                        location: { en: "Hotel Relax III", zh: "旅乐序三馆" }, 
+                        note: { en: "Drop off directly at the hotel lobby entrance. Safe and sound back in your rooms.", zh: "战利品和伴手礼直接塞满行李箱，长辈在房间舒舒服服看电视休息，准备明天的回程机票。" }, 
+                        food: { en: "Your night snacks or local street food picks.", zh: "打包回房间的台湾盐酥鸡、珍珠奶茶大夜宵。" } 
+                    }
                 ]
             },
             "June 1": {
-                title: "Day 6: Old Taipei Charm & Farewell",
+                title: { en: "Jun 1 (Mon) - Chengzhong Market & Departure Home", zh: "6月1日 (周一) - 台北城中老市场 + 快乐回马" },
                 events: [
-                    { time: "09:15", activity: "Chengzhong Market Exploration", location: "Downtown Taipei", note: "Immerse in authentic old-school Taipei vibes. Safe, slower morning pace.", food: "Traditional hand-crafted bean curd jelly (Douhua), old-fashioned beef noodles, local scallion bread." },
-                    { time: "11:45", activity: "Airport Charter Departure", location: "Hotel ➔ Taoyuan Airport", note: "Ensure prompt assembly. Tight schedule to meet the strict 12:30 PM airport arrival target.", food: "Quick station lunches or airport terminal dining options." },
-                    { time: "12:30", activity: "Airport Check-In", location: "Taoyuan Terminal", note: "Relax at the departure gate for the 3:00 PM outbound international flight home.", food: "Airport duty-free area food options, Taiwanese milk tea final round." }
+                    { 
+                        time: "08:00", 
+                        activity: { en: "Chengzhong Market Exploration", zh: "台北城中传统老市场体验" }, 
+                        location: { en: "Old Taipei Market Quarter", zh: "台北市中心" }, 
+                        note: { en: "Immerse in authentic old-school Taipei local vibes. Safe, slower morning pace for checking out old market stalls.", zh: "【体验纯正台北慢生活】就在酒店附近，全是平坦有遮阳篷的老巷子。长辈最爱逛这种充满人间烟火气的地方，看看台湾本地人的日常生活蔬菜水果。" }, 
+                        food: { en: "Traditional hand-crafted bean curd jelly (Douhua), old-fashioned beef noodles, local scallion bread.", zh: "手作传统古早味冰豆花、地道红烧牛肉面、现烤葱饼。" } 
+                    },
+                    { 
+                        time: "11:45", 
+                        activity: { en: "Check Out & Airport Charter Run", zh: "退房并集合乘坐包车去机场" }, 
+                        location: { en: "Hotel Relax III ➔ Taoyuan", zh: "酒店大堂集合出发" }, 
+                        note: { en: "Ensure prompt assembly. Strict 12:30 PM airport arrival target to catch our flight safely.", zh: "请大家务必准时在 11:45 前把所有大行李推到大堂。包车司机会准时在门口等我们，确保 12:30 准时到机场办理退税和登机。" }, 
+                        food: { en: "Quick station lunches or bento boxes.", zh: "带上几盒经典的台铁排骨便当车上吃。" } 
+                    },
+                    { 
+                        time: "12:30", 
+                        activity: { en: "Airport Flight Check-In", zh: "桃园机场航站楼托运与登机" }, 
+                        location: { en: "Taoyuan Int'l Airport", zh: "台北桃园机场大厅" }, 
+                        note: { en: "Drop heavy luggage boxes, clear exit passport control, and relax comfortably at our designated departure gate wing.", zh: "托运好所有大件行李箱，轻轻松松过海关。距离 15:00 飞机起飞还有时间，可以在机场免税店最后查漏补缺，然后到登机口坐着休息。" }, 
+                        food: { en: "Airport duty-free food selections, final round of authentic Taiwanese milk tea.", zh: "机场特色餐厅，最后来一杯热乎乎的台湾珍珠奶茶，回大马啦！" } 
+                    }
                 ]
             }
         };
 
-        // Simulated real-time updates for target parameters
         function updateLiveWeather() {
-            // In production, fetch live APIs like OpenWeatherMap
+            document.getElementById('osa-temp').innerText = (19 + Math.floor(Math.random() * 3)) + "°C";
             document.getElementById('oki-temp').innerText = (26 + Math.floor(Math.random() * 3)) + "°C";
             document.getElementById('tpe-temp').innerText = (24 + Math.floor(Math.random() * 3)) + "°C";
             const now = new Date();
-            document.getElementById('weather-update-time').innerText = `Updated ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            const prefix = labelTranslations[currentLang].updated;
+            document.getElementById('weather-update-time').innerText = `${prefix} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         }
 
         let activeDay = "May 27";
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
+            
+            // Translate static UI labels
+            document.getElementById('app-title').innerText = labelTranslations[currentLang].title;
+            document.getElementById('weather-title').innerHTML = `<i class="fa-solid fa-cloud-sun text-teal-600"></i> ${labelTranslations[currentLang].weather}`;
+            
+            document.querySelector('.id-osaka').innerText = labelTranslations[currentLang].osaka;
+            document.querySelector('.id-okinawa').innerText = labelTranslations[currentLang].okinawa;
+            document.querySelector('.id-taipei').innerText = labelTranslations[currentLang].taipei;
+
+            updateLiveWeather();
+            renderTabs();
+            renderItinerary();
+        }
 
         function renderTabs() {
             const container = document.getElementById('day-tabs');
@@ -159,7 +504,7 @@
             const container = document.getElementById('itinerary-timeline');
             const data = tripData[activeDay];
             
-            let html = `<div class="mb-2"><h2 class="text-base font-black text-slate-800">${data.title}</h2></div>`;
+            let html = `<div class="mb-2"><h2 class="text-base font-black text-slate-800">${data.title[currentLang]}</h2></div>`;
             
             data.events.forEach(item => {
                 html += `
@@ -169,9 +514,9 @@
                         <div class="flex justify-between items-start pl-2">
                             <div>
                                 <span class="inline-block bg-teal-50 text-teal-700 text-xs font-extrabold px-2 py-0.5 rounded-md mb-1 shadow-xs">${item.time}</span>
-                                <h3 class="font-bold text-slate-800 text-base leading-tight">${item.activity}</h3>
+                                <h3 class="font-bold text-slate-800 text-base leading-tight">${item.activity[currentLang]}</h3>
                                 <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
-                                    <i class="fa-solid fa-location-dot text-rose-500"></i> ${item.location}
+                                    <i class="fa-solid fa-location-dot text-rose-500"></i> ${item.location[currentLang]}
                                 </p>
                             </div>
                         </div>
@@ -179,20 +524,20 @@
                         ${item.shows ? `
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex items-start space-x-2 animate-pulse pl-3">
                             <i class="fa-solid fa-circle-exclamation text-amber-600 mt-0.5 text-sm"></i>
-                            <div><strong class="font-bold">Live Show Alert:</strong> ${item.shows}</div>
+                            <div><strong class="font-bold">${labelTranslations[currentLang].alert}:</strong> ${item.shows[currentLang]}</div>
                         </div>
                         ` : ''}
 
                         <div class="grid grid-cols-1 gap-2.5 pt-1 pl-2 text-xs">
                             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                <span class="font-bold text-slate-500 block mb-0.5 uppercase tracking-wider text-[10px]">💡 Senior & Logistics Note</span>
-                                <p class="text-slate-700 font-medium leading-relaxed">${item.note}</p>
+                                <span class="font-bold text-slate-500 block mb-0.5 uppercase tracking-wider text-[10px]">💡 ${labelTranslations[currentLang].note}</span>
+                                <p class="text-slate-700 font-medium leading-relaxed">${item.note[currentLang]}</p>
                             </div>
                             <div class="bg-rose-50/50 p-2.5 rounded-xl border border-rose-100/70">
                                 <span class="font-bold text-rose-600 block mb-0.5 uppercase tracking-wider text-[10px] flex items-center gap-1">
-                                    <i class="fa-solid fa-utensils"></i> Food Suggestion
+                                    <i class="fa-solid fa-utensils"></i> ${labelTranslations[currentLang].food}
                                 </span>
-                                <p class="text-slate-700 font-medium leading-relaxed">${item.food}</p>
+                                <p class="text-slate-700 font-medium leading-relaxed">${item.food[currentLang]}</p>
                             </div>
                         </div>
                     </div>
@@ -202,12 +547,10 @@
             container.innerHTML = html;
         }
 
-        // Initialize App Execution
         window.onload = () => {
             renderTabs();
             renderItinerary();
             updateLiveWeather();
-            // Interval loop to refresh mock environmental parameter variables
             setInterval(updateLiveWeather, 30000);
         };
     </script>
