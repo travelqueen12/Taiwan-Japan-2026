@@ -73,6 +73,9 @@
     <script>
         let currentLang = 'en';
 
+        // FIXED: Set initial active day to May 27 so it populates immediately on loading
+        let activeDay = "May 27";
+
         const labelTranslations = {
             en: {
                 title: "Family Tour 2026",
@@ -167,7 +170,7 @@
                         location: { en: "Chatan Area", zh: "美国村北谷区域" }, 
                         duration: { en: "5 mins walk", zh: "步行仅需 5 分钟" },
                         buy: { en: "Local bakery treats or souvenir breakfast drip coffees.", zh: "西饼屋现烤手工长条面包、特色挂耳咖啡。" }, 
-                        food: { en: "Local American Village breakfast cafes, hot morning egg & pancake sets.", zh: "美国村海景早茶、松饼或日式元气鸡蛋早餐组合。" } 
+                        food: { en: "Local American Village breakfast cafes, hot morning egg & pancake sets.", zh: "美国村海景早茶、松饼 or 日式元气鸡蛋早餐组合。" } 
                     },
                     { 
                         time: "10:00", 
@@ -219,7 +222,7 @@
                         time: "08:00", 
                         activity: { en: "Depart Hotel", zh: "酒店退房出发" }, 
                         location: { en: "Chatan", zh: "北谷" }, 
-                        duration: { en: "Drive from Chatan to Naha: 35 mins", zh: "自驾从北谷出发往南部的特定区：车程约 35 分钟" },
+                        duration: { en: "Drive from Chatan to Naha: 35 mins", zh: "自驾从北谷出发往那霸：车程约 35 分钟" },
                         buy: { en: "Grab unique vending machine localized drink items.", zh: "收集路边贩卖机限定冲绳香片茶、果汁。" }, 
                         food: { en: "Quick pork & egg rice balls (Onigiri) from convenience store stops.", zh: "打包便利店超人气海苔厚餐肉蛋大饭团（绝无牛肉成分）。" } 
                     },
@@ -259,7 +262,7 @@
                         time: "16:00", 
                         activity: { en: "DFS Outlet", zh: "DFS 环球免税店" }, 
                         location: { en: "Naha", zh: "那霸新都心" }, 
-                        duration: { Market to DFS: "12 mins drive", zh: "公设市场开往新都心免税店：车程约 12 分钟" },
+                        duration: { en: "Market to DFS: 12 mins drive", zh: "公设市场开往新都心免税店：车程约 12 分钟" },
                         buy: { en: "Tax-free luxury bags, designer perfume sets, luxury watches.", zh: "免税大牌名包、名表、国际大牌限定香水彩妆礼盒。" }, 
                         food: { en: "Premium iced siphon coffees, layered matcha crepe pastries.", zh: "大厦高级咖啡厅的冰镇手冲单品咖啡、法式抹茶千层蛋糕。" } 
                     },
@@ -352,7 +355,7 @@
                     { 
                         time: "23:00", 
                         activity: { en: "Starbeary Kiap Kiap", zh: "深夜夹公仔狂欢 (年轻人自选)" }, 
-                        location: { en: "Taipei Arcade Street", zh: "台北街区" }, 
+                        location: { en: "Cyber Arcade Center", zh: "台北街区" }, 
                         duration: { en: "3 mins walk from hotel", zh: "旅馆楼下步行：仅需 3 分钟" },
                         buy: { en: "Win popular anime figurines, plushies from game catchers.", zh: "【战利品】抓娃娃机里抓到的最新款限定动漫手办、超萌公仔玩偶。" }, 
                         food: { en: "Taiwanese traditional iced bean curd jelly (Douhua), taro ball soup.", zh: "深夜甜品：路边手工冰糖芋圆手工豆花汤、红豆黑糖水。" } 
@@ -374,7 +377,7 @@
                         time: "10:15", 
                         activity: { en: "Jiufen Old Street", zh: "九份老街怀旧复古慢行" }, 
                         location: { en: "Jiufen Mountain", zh: "新北瑞芳" }, 
-                        duration: { en: "Taipei to Jiufen via driver: 50 mins", zh: "司机平稳载送至九份高位圣明宫入口（避开阶梯）：车程约 50 分钟" },
+                        duration: { en: "Taipei to Jiufen via driver: 50 mins", zh: "司机平稳载送至九份高位圣明宫入口：车程约 50 分钟" },
                         note: { en: "CRITICAL DIRECTION: Instruct the charter driver to use the high-elevation road drop-off point exclusively to walk into the town along flat terrain and avoid steep mountain stairs.", zh: "【⚠️包车高位停靠】司机已安排直接开到「九份最高处圣明宫路口」放下全家。这样可以直接从上往下走平坦老街，【完美避开九份所有夺命长台阶】。" }, 
                         buy: { en: "Handmade ginger tea bricks, souvenir wooden postcards, historic sky lantern souvenirs.", zh: "九份手工黑糖生姜茶砖、复古木质风景明信片、十分小天灯挂件。" }, 
                         food: { en: "Famous local taro ball desserts and sweet mountain tea items.", zh: "【绝无牛肉】招牌阿柑姨芋圆或赖阿婆芋圆（软糯Q弹），古董茶楼坐看山海绝景。" } 
@@ -392,7 +395,7 @@
                         activity: { en: "Ximending + Carrefour Guilin 🛍️", zh: "西门町闲逛 + 家乐福手信终极狂购 🛍️" }, 
                         location: { en: "Wanhua District", zh: "台北万华区" }, 
                         duration: { en: "Keelung back to Taipei via driver: 40 mins", zh: "司机载全家返回台北市区家乐福：车程约 40 分钟" },
-                        buy: { en: "【MASSIVE SHOPPING】Chia Te Chia鳳梨酥, Yuki Nougat crackers, Local chicken broth noodle packs, local teas.", zh: "【手信大买特买】佳德凤梨酥、微热山丘、三点一刻奶茶、一口牛轧糖饼干（避开牛肉即食面）。" }, 
+                        buy: { en: "【MASSIVE SHOPPING】Chia Te Chia鳳梨酥, Yuki Nougat crackers, Local chicken broth noodle packs, local teas.", zh: "【手信大买特买】佳德凤梨酥、微热山丘、三点一刻奶茶、一口牛轧糖饼干（完全避开麻辣牛肉泡面）。" }, 
                         food: { en: "Ay-Chung Flour-Rice Noodles, fresh local wax apples, premium sweet mango cuts.", zh: "【无牛肉安心吃】西门町招牌阿宗大肠面线，家乐福超市里买现切的台湾极品大芒果、清甜红莲雾。" } 
                     },
                     { 
@@ -444,8 +447,6 @@
             const prefix = labelTranslations[currentLang].updated;
             document.getElementById('weather-update-time').innerText = `${prefix} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         }
-
-        let activeDay = "May 27";
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
