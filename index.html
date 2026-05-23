@@ -11,69 +11,106 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-12">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-24">
 
-    <header class="bg-gradient-to-r from-teal-600 to-cyan-700 text-white shadow-md sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-compass text-2xl text-amber-300"></i>
+                <i class="fa-solid fa-compass text-2xl text-amber-300 animate-spin-slow"></i>
                 <h1 class="font-bold text-lg tracking-wide" id="app-title">Family Tour 2026</h1>
             </div>
             
             <div class="flex items-center space-x-2">
-                <button id="lang-toggle" onclick="toggleLanguage()" class="bg-amber-400 hover:bg-amber-500 text-teal-900 px-2.5 py-1 rounded-lg text-xs font-bold shadow-xs transition-all active:scale-95">
+                <button id="lang-toggle" onclick="toggleLanguage()" class="bg-coral-500 hover:bg-coral-600 bg-orange-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold shadow-xs transition-all active:scale-95">
                     中文
                 </button>
-                <div class="bg-teal-800/50 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
+                <div class="bg-blue-900/50 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">
                     <span id="current-date-badge">May 27</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 mt-4 space-y-6">
-
-        <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2" id="weather-title">
-                    <i class="fa-solid fa-cloud-sun text-teal-600"></i> Live Location Weather
-                </h2>
-                <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Live</span>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-slate-500 uppercase id-okinawa">Okinawa</p>
-                        <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">27°C</p>
-                        <p class="text-xs text-slate-600 font-medium id-cond-oki" id="oki-cond">Partly Cloudy</p>
-                    </div>
-                    <i class="fa-solid fa-cloud-sun text-3xl text-amber-400"></i>
-                </div>
-                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-3 rounded-xl border border-emerald-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-slate-500 uppercase id-taipei">Taipei</p>
-                        <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">25°C</p>
-                        <p class="text-xs text-slate-600 font-medium id-cond-tpe" id="tpe-cond">Passing Shower</p>
-                    </div>
-                    <i class="fa-solid fa-cloud-showers-heavy text-3xl text-sky-400"></i>
-                </div>
-            </div>
-        </section>
-
-        <section class="overflow-x-auto no-scrollbar py-1">
-            <div class="flex space-x-2" id="day-tabs">
-                </div>
-        </section>
-
-        <section class="space-y-4" id="itinerary-timeline">
-            </section>
+    <main class="max-w-md mx-auto px-4 mt-4">
         
+        <div id="itinerary-view" class="space-y-6">
+            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2" id="weather-title">
+                        <i class="fa-solid fa-cloud-sun text-blue-600"></i> Live Location Weather
+                    </h2>
+                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Live</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase id-okinawa">Okinawa</p>
+                            <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">27°C</p>
+                            <p class="text-xs text-slate-600 font-medium id-cond-oki" id="oki-cond">Partly Cloudy</p>
+                        </div>
+                        <i class="fa-solid fa-cloud-sun text-3xl text-amber-400"></i>
+                    </div>
+                    <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-3 rounded-xl border border-indigo-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase id-taipei">Taipei</p>
+                            <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">25°C</p>
+                            <p class="text-xs text-slate-600 font-medium id-cond-tpe" id="tpe-cond">Passing Shower</p>
+                        </div>
+                        <i class="fa-solid fa-cloud-showers-heavy text-3xl text-sky-400"></i>
+                    </div>
+                </div>
+            </section>
+
+            <section class="overflow-x-auto no-scrollbar py-1">
+                <div class="flex space-x-2" id="day-tabs">
+                    </div>
+            </section>
+
+            <section class="space-y-4" id="itinerary-timeline">
+                </section>
+        </div>
+
+        <div id="checklist-view" class="hidden space-y-6">
+            <div class="mb-2">
+                <h2 class="text-lg font-black text-slate-800" id="checklist-header-title">Travel Checklists</h2>
+                <p class="text-xs text-slate-400 mt-0.5" id="checklist-header-desc">Tap items to mark them off as you prepare!</p>
+            </div>
+
+            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+                <h3 class="font-bold text-blue-800 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-suitcase-rolling text-orange-500"></i>
+                    <span id="section-bring-title">What to Bring (🎒 行李打包清单)</span>
+                </h3>
+                <div class="space-y-2.5" id="bring-list-container">
+                    </div>
+            </section>
+
+            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+                <h3 class="font-bold text-blue-800 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-basket-shopping text-orange-500"></i>
+                    <span id="section-buy-title">Shopping Checklist (🛍️ 必买特产要点)</span>
+                </h3>
+                <div class="space-y-2.5" id="buy-list-container">
+                    </div>
+            </section>
+        </div>
     </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50">
+        <div class="max-w-md mx-auto grid grid-cols-2 text-center py-2">
+            <button onclick="switchView('itinerary')" id="nav-itinerary-btn" class="flex flex-col items-center justify-center space-y-0.5 text-blue-600 font-bold transition-colors">
+                <i class="fa-solid fa-calendar-day text-lg"></i>
+                <span class="text-[11px]" id="nav-label-itinerary">Itinerary</span>
+            </button>
+            <button onclick="switchView('checklist')" id="nav-checklist-btn" class="flex flex-col items-center justify-center space-y-0.5 text-slate-400 font-medium transition-colors">
+                <i class="fa-solid fa-list-check text-lg"></i>
+                <span class="text-[11px]" id="nav-label-checklist">Checklists</span>
+            </button>
+        </div>
+    </nav>
 
     <script>
         let currentLang = 'en';
-
-        // FIXED: Set initial active day to May 27 so it populates immediately on loading
         let activeDay = "May 27";
 
         const labelTranslations = {
@@ -92,7 +129,13 @@
                 gate: "Gate",
                 terminal: "Terminal",
                 status: "Status",
-                scheduled: "Scheduled"
+                scheduled: "Scheduled",
+                chkTitle: "Travel Checklists",
+                chkDesc: "Tap items to mark them off as you prepare!",
+                secBring: "What to Bring (🎒 行李打包清单)",
+                secBuy: "Shopping Checklist (🛍️ 必买特产要点)",
+                lblItin: "Itinerary",
+                lblChk: "Checklists"
             },
             zh: {
                 title: "2026 家族温馨之旅",
@@ -109,8 +152,36 @@
                 gate: "登机口",
                 terminal: "航站楼",
                 status: "状态",
-                scheduled: "计划时间"
+                scheduled: "计划时间",
+                chkTitle: "出行备忘清单",
+                chkDesc: "点击勾选框，轻松核对出门物品与购物目标！",
+                secBring: "行李打包准备 (🎒 必带物品)",
+                secBuy: "冲绳/台北特产备忘 (🛍️ 必买清单)",
+                lblItin: "日程路线",
+                lblChk: "备忘清单"
             }
+        };
+
+        // PRE-POPULATED CORE CHECKLIST DATA OBJECTS
+        const checklistData = {
+            bring: [
+                { id: "b1", en: "Passports & Malaysia International IDs", zh: "全家护照原件、马来西亚身份证件" },
+                { id: "b2", en: "Printed Airline Tickets (MH366, TigerAir, Peach)", zh: "纸质航班机票行程单 (马航、台湾虎航、乐桃)" },
+                { id: "b3", en: "International Driver's Permit (For Okinawa Driving)", zh: "国际驾照文本/翻译件 (冲绳自驾专用)" },
+                { id: "b4", en: "Universal Travel Power Adapters & Extension cords", zh: "多功能旅行转换插头、长线插座板" },
+                { id: "b5", en: "Comfortable Flat Walking Shoes for Grandmas & Seniors", zh: "适合长辈步行的透气防滑平底鞋" },
+                { id: "b6", en: "Personal Medicines, Hydration Salts & Daily Vitamins", zh: "常用私人必备药品、防暑补水盐、维他命" },
+                { id: "b7", en: "Light Outer Jackets / Umbrellas (For Passing Showers)", zh: "轻便防风防晒外套、随身防雨折叠伞" }
+            ],
+            buy: [
+                { id: "s1", en: "Okinawa Churaumi Aquarium Whale Shark plushies/capsules", zh: "美丽海水族馆限定鲸鲨公仔、海洋精美扭蛋" },
+                { id: "s2", en: "Okinawa Yukashio Sea Salt Cookies & Biscuits", zh: "冲绳宮古岛雪盐小饼干、雪盐年糕礼盒" },
+                { id: "s3", en: "Artisan Ceramic Shisa Lion Statues (For good fortune)", zh: "冲绳传统手造彩色辟邪风狮爷摆件 (Shisa)" },
+                { id: "s4", en: "Jiufen Mountain Brown Sugar Ginger Tea Bricks", zh: "九份老街纯正手工黑糖生姜茶砖" },
+                { id: "s5", en: "Chia Te (佳德) Premium Traditional Pineapple Cakes", zh: "台北佳德原味凤梨酥、微热山丘礼盒" },
+                { id: "s6", en: "Yuki Nougat Crackers (Famed savory onion crackers)", zh: "一站式采购香葱牛轧糖夹心饼干 (家乐福桂林店)" },
+                { id: "s7", en: "Yilan Local Sanxing Scallion Crisps & Savory crackers", zh: "宜兰特产高山三星葱酥饼、手工金桔蜜饯" }
+            ]
         };
 
         const tripData = {
@@ -224,7 +295,7 @@
                         location: { en: "Chatan", zh: "北谷" }, 
                         duration: { en: "Drive from Chatan to Naha: 35 mins", zh: "自驾从北谷出发往那霸：车程约 35 分钟" },
                         buy: { en: "Grab unique vending machine localized drink items.", zh: "收集路边贩卖机限定冲绳香片茶、果汁。" }, 
-                        food: { en: "Quick pork & egg rice balls (Onigiri) from convenience store stops.", zh: "打包便利店超人气海苔厚餐肉蛋大饭团（绝无牛肉成分）。" } 
+                        food: { en: "Quick pork & egg rice balls (Onigiri) from convenience store stops.", zh: "打包便利店超人气海苔厚餐肉蛋大饭团（大获好评，绝无牛肉）。" } 
                     },
                     { 
                         time: "10:00", 
@@ -342,7 +413,7 @@
                         location: { en: "Yilan", zh: "宜兰罗东" }, 
                         duration: { en: "Farm to Night Market via driver: 15 mins", zh: "司机开车送达夜市入口：车程约 15 分钟" },
                         buy: { en: "Yilan Sanxing scallion crisps, dried fruit boxes.", zh: "宜兰标志性的高山三星葱酥饼干、手作古法金桔干。" }, 
-                        food: { en: "滋补当归羊肉汤, crisp scallion chicken pastries, peanut ice cream rolls.", zh: "【安心夜市小吃】招牌当归羊肉汤（暖胃滋补）、炸鸡排、三星葱饼、花生卷冰淇淋。" } 
+                        food: { en: "滋补当归羊肉汤, crisp scallion chicken pastries, peanut ice cream rolls.", zh: "【丝滑吃小吃】招牌当归羊肉汤（暖胃滋补）、炸鸡排、三星葱饼、花生卷冰淇淋。" } 
                     },
                     { 
                         time: "20:00", 
@@ -440,6 +511,56 @@
             }
         };
 
+        function switchView(viewName) {
+            const itinView = document.getElementById('itinerary-view');
+            const chkView = document.getElementById('checklist-view');
+            const itinBtn = document.getElementById('nav-itinerary-btn');
+            const chkBtn = document.getElementById('nav-checklist-btn');
+
+            if(viewName === 'itinerary') {
+                itinView.classList.remove('hidden');
+                chkView.classList.add('hidden');
+                itinBtn.className = "flex flex-col items-center justify-center space-y-0.5 text-blue-600 font-bold transition-colors";
+                chkBtn.className = "flex flex-col items-center justify-center space-y-0.5 text-slate-400 font-medium transition-colors";
+            } else {
+                itinView.classList.add('hidden');
+                chkView.classList.remove('hidden');
+                itinBtn.className = "flex flex-col items-center justify-center space-y-0.5 text-slate-400 font-medium transition-colors";
+                chkBtn.className = "flex flex-col items-center justify-center space-y-0.5 text-blue-600 font-bold transition-colors";
+                renderChecklists();
+            }
+        }
+
+        function renderChecklists() {
+            const bringContainer = document.getElementById('bring-list-container');
+            const buyContainer = document.getElementById('buy-list-container');
+            
+            bringContainer.innerHTML = '';
+            buyContainer.innerHTML = '';
+
+            // Render Bring List
+            checklistData.bring.forEach(item => {
+                const labelText = currentLang === 'en' ? item.en : item.zh;
+                bringContainer.innerHTML += `
+                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer select-none">
+                        <input type="checkbox" id="${item.id}" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 mt-0.5 accent-blue-600">
+                        <span class="text-xs text-slate-700 font-medium leading-tight">${labelText}</span>
+                    </label>
+                `;
+            });
+
+            // Render Buy List
+            checklistData.buy.forEach(item => {
+                const labelText = currentLang === 'en' ? item.en : item.zh;
+                buyContainer.innerHTML += `
+                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer select-none">
+                        <input type="checkbox" id="${item.id}" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 mt-0.5 accent-blue-600">
+                        <span class="text-xs text-slate-700 font-medium leading-tight">${labelText}</span>
+                    </label>
+                `;
+            });
+        }
+
         function updateLiveWeather() {
             document.getElementById('oki-temp').innerText = (26 + Math.floor(Math.random() * 3)) + "°C";
             document.getElementById('tpe-temp').innerText = (24 + Math.floor(Math.random() * 3)) + "°C";
@@ -453,14 +574,25 @@
             document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
             
             document.getElementById('app-title').innerText = labelTranslations[currentLang].title;
-            document.getElementById('weather-title').innerHTML = `<i class="fa-solid fa-cloud-sun text-teal-600"></i> ${labelTranslations[currentLang].weather}`;
+            document.getElementById('weather-title').innerHTML = `<i class="fa-solid fa-cloud-sun text-blue-600"></i> ${labelTranslations[currentLang].weather}`;
             
             document.querySelector('.id-okinawa').innerText = labelTranslations[currentLang].okinawa;
             document.querySelector('.id-taipei').innerText = labelTranslations[currentLang].taipei;
 
+            // Translate Checklist Labels
+            document.getElementById('checklist-header-title').innerText = labelTranslations[currentLang].chkTitle;
+            document.getElementById('checklist-header-desc').innerText = labelTranslations[currentLang].chkDesc;
+            document.getElementById('section-bring-title').innerText = labelTranslations[currentLang].secBring;
+            document.getElementById('section-buy-title').innerText = labelTranslations[currentLang].secBuy;
+            document.getElementById('nav-label-itinerary').innerText = labelTranslations[currentLang].lblItin;
+            document.getElementById('nav-label-checklist').innerText = labelTranslations[currentLang].lblChk;
+
             updateLiveWeather();
             renderTabs();
             renderItinerary();
+            if(!document.getElementById('checklist-view').classList.contains('hidden')) {
+                renderChecklists();
+            }
         }
 
         function renderTabs() {
@@ -470,7 +602,7 @@
                 const isActive = day === activeDay;
                 const btn = document.createElement('button');
                 btn.className = `px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
-                    isActive ? 'bg-teal-600 text-white shadow-sm scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
+                    isActive ? 'bg-blue-600 text-white shadow-sm scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
                 }`;
                 btn.innerText = day;
                 btn.onclick = () => {
@@ -492,16 +624,16 @@
             data.events.forEach(item => {
                 html += `
                     <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3 relative overflow-hidden">
-                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-teal-500 to-cyan-500"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-500 to-indigo-600"></div>
                         
                         <div class="flex justify-between items-start pl-2">
                             <div>
-                                <span class="inline-block bg-teal-50 text-teal-700 text-xs font-extrabold px-2 py-0.5 rounded-md mb-1 shadow-xs">${item.time}</span>
+                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-extrabold px-2 py-0.5 rounded-md mb-1 shadow-xs">${item.time}</span>
                                 <h3 class="font-bold text-slate-800 text-base leading-tight">${item.activity[currentLang]}</h3>
                                 <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
                                     <i class="fa-solid fa-location-dot text-rose-500"></i> ${item.location[currentLang]}
                                 </p>
-                                <span class="inline-block mt-1 text-[11px] text-teal-600 font-semibold bg-teal-50/50 px-2 py-0.5 rounded-md">
+                                <span class="inline-block mt-1 text-[11px] text-blue-600 font-semibold bg-blue-50/50 px-2 py-0.5 rounded-md">
                                     ${labelTranslations[currentLang].transitTime} ${item.duration[currentLang]}
                                 </span>
                             </div>
@@ -511,7 +643,7 @@
                         <div class="mx-2 bg-slate-900 text-slate-100 rounded-xl p-3 text-xs shadow-inner space-y-2">
                             <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
                                 <span class="font-black text-amber-400 tracking-wider text-sm"><i class="fa-solid fa-plane-departure mr-1"></i> ${item.flightTracker.flightNo}</span>
-                                <span class="text-[10px] bg-teal-500 text-slate-900 font-extrabold px-2 py-0.5 rounded-full uppercase">${labelTranslations[currentLang].flightPanel}</span>
+                                <span class="text-[10px] bg-blue-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">${labelTranslations[currentLang].flightPanel}</span>
                             </div>
                             <div class="grid grid-cols-4 text-center gap-1">
                                 <div>
