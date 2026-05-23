@@ -79,7 +79,7 @@
                 weather: "Live Location Weather",
                 live: "Live",
                 updated: "Updated",
-                note: "Note for Seniors",
+                buy: "What to Buy / Shopping",
                 food: "Food Suggestion",
                 alert: "Live Show Alert",
                 okinawa: "Okinawa",
@@ -90,7 +90,7 @@
                 weather: "实时目的地天气",
                 live: "实时更新",
                 updated: "更新于",
-                note: "长辈贴心提示",
+                buy: "必买推荐 / 购物焦点",
                 food: "美食推荐",
                 alert: "剧场表演时间提醒",
                 okinawa: "冲绳",
@@ -103,18 +103,39 @@
                 title: { en: "May 27 (Wed) - Arrive Okinawa", zh: "5月27日 (周三) - 抵达冲绳" },
                 events: [
                     { 
+                        time: "05:30", 
+                        activity: { en: "Depart From Home", zh: "从家出发（包车司机已安排）" }, 
+                        location: { en: "Home ➔ Airport", zh: "家 ➔ 机场" }, 
+                        buy: { en: "Travel essentials at airport duty-free shops.", zh: "机场免税店出行基础用品补给。" }, 
+                        food: { en: "Quick breakfast at airport terminal before check-in.", zh: "登机前在机场航站楼享用简易早餐。" } 
+                    },
+                    { 
+                        time: "09:15", 
+                        activity: { en: "Depart from KL (MH366) ✈️", zh: "吉隆坡起飞出发 (马航 MH366) ✈️" }, 
+                        location: { en: "KLIA", zh: "吉隆坡国际机场" }, 
+                        buy: { en: "In-flight duty-free exclusive local items.", zh: "马航机上免税专属限定商品。" }, 
+                        food: { en: "Malaysia Airlines hot lunch tray service onboard.", zh: "享用马航提供的空中热食午餐。" } 
+                    },
+                    { 
+                        time: "18:30", 
+                        activity: { en: "Depart from Taoyuan Airport (Tiger Air) ✈️", zh: "转机起飞前往冲绳 (虎航) ✈️" }, 
+                        location: { en: "Taoyuan Int'l Airport", zh: "台北桃园机场" }, 
+                        buy: { en: "Quick Taiwanese snacks at transit duty-free aisles.", zh: "转机免税走廊的台湾特色小零食。" }, 
+                        food: { en: "Transit refreshments, Taiwanese light snacks at the gate.", zh: "候机休息站小吃，或航站楼轻食。" } 
+                    },
+                    { 
                         time: "20:50", 
-                        activity: { en: "Arrive Naha Airport", zh: "抵达那霸机场" }, 
+                        activity: { en: "Arrive Naha Airport 🛬", zh: "顺利降落那霸机场 🛬" }, 
                         location: { en: "Naha Airport", zh: "那霸机场" }, 
-                        note: { en: "Immigration & Customs", zh: "办理入境与海关手续" }, 
-                        food: { en: "Convenience store favorites or late-night light options.", zh: "便利店美味小吃或机场轻食。" } 
+                        buy: { en: "Pick up an Okinawa tourist physical data map at arrival hall.", zh: "接机大厅服务台领取一份冲绳自驾旅游纸质地图手册。" }, 
+                        food: { en: "Convenience store hot grabs or A&W Burger terminal branch.", zh: "冲绳限定 A&W 招牌橙汁汉堡，或者机场全家暖心关东煮。" } 
                     },
                     { 
                         time: "22:30", 
-                        activity: { en: "Hotel Check-in & Rest", zh: "办理酒店入住与休息" }, 
+                        activity: { en: "Hotel Check-in & Rest", zh: "办理酒店入住与安顿" }, 
                         location: { en: "Hotel Chatan by Sunrest Resort", zh: "北谷太阳之息度假酒店" }, 
-                        note: { en: "Late snack / rest and unwind.", zh: "享用深夜小点心，好好休息放松。" }, 
-                        food: { en: "Late snack/rest", zh: "附近便利店或深夜小吃。" } 
+                        buy: { en: "Okinawa local milk, limited beverages, and snacks at Lawson/FamilyMart.", zh: "便利店必买：限量版冲绳限定风味冰牛奶、泡盛酒小甜点。" }, 
+                        food: { en: "Late-night instant ramen, hot snacks from lobby kiosks.", zh: "热乎乎的日式方便面、炸鸡串或串烧。" } 
                     }
                 ]
             },
@@ -124,45 +145,45 @@
                     { 
                         time: "07:30", 
                         activity: { en: "Leave Hotel for Breakfast", zh: "晨起出发享用早餐" }, 
-                        location: { en: "Chatan Area", zh: "北谷区域" }, 
-                        note: { en: "Gather the family for a fresh morning start.", zh: "全家轻松集合，开启美好的早晨。" }, 
-                        food: { en: "Local breakfast choices nearby.", zh: "附近地道的早茶或西式简餐。" } 
+                        location: { en: "Chatan Area", zh: "美国村北谷区域" }, 
+                        buy: { en: "Local bakery treats or souvenir breakfast drip coffees.", zh: "西饼屋现烤手工面包、特色挂耳咖啡。" }, 
+                        food: { en: "Local American Village breakfast cafes, hot morning coffee sets.", zh: "美国村海景早茶、松饼或日式元气早餐组合。" } 
                     },
                     { 
                         time: "10:00", 
                         activity: { en: "Okinawa Churaumi Aquarium 🐋", zh: "美丽海水族馆 🐋" }, 
                         location: { en: "Motobu", zh: "本部町" }, 
-                        note: { en: "Indoor / Air-con. View whale sharks. Very comfortable for seniors.", zh: "全室内空调展区，走路平坦舒适，适合长辈。看震撼的黑潮之海大水槽与鲸鲨。" }, 
+                        buy: { en: "Whale shark plushies, aquarium capsule toys, exclusive marine keychains.", zh: "【特色必买】超萌大鲸鲨毛绒玩偶、水族馆限定精美扭蛋、海洋风钥匙扣。" }, 
                         shows: { en: "Dolphin Show (Okichan Theater) runs at 11:30 & 13:00. Plan your internal path accordingly!", zh: "【海豚表演提醒】主剧场表演时间为 11:30 和 13:00，请注意安排游览路线！" },
-                        food: { en: "View whale sharks while dining inside aquarium options.", zh: "在大水槽旁的餐厅一边看鲸鲨一边享用美食。" } 
+                        food: { en: "Ocean Blue restaurant treats, ice cream next to the main shark tank.", zh: "在黑潮之海大水槽旁的咖啡厅吃海鲜意面，近距离看鲸鲨游动。" } 
                     },
                     { 
                         time: "14:30", 
                         activity: { en: "Kouri Island & Bridge 🌉", zh: "古宇利岛与跨海大桥 🌉" }, 
                         location: { en: "Kouri Island", zh: "古宇利岛" }, 
-                        note: { en: "Scenic drive. Photo stop at the bridge.", zh: "超美海景自驾线，可在桥头安全停靠拍摄全家福。" }, 
-                        food: { en: "Photo at the bridge / famous local snacks.", zh: "古宇利岛招牌虾饭、海盐冰淇淋。" } 
+                        buy: { en: "Kouri Island brown sugar, premium native sea salt packages.", zh: "古宇利岛纯手工黑糖、天然海盐调风味包。" }, 
+                        food: { en: "Kouri Shrimp Truck iconic garlic shrimp plates, sea salt soft-serve ice cream.", zh: "全冲绳最火的 Kouri 蒜香虾饭、Tiffany 蓝海景海盐软冰淇淋。" } 
                     },
                     { 
                         time: "16:00", 
-                        activity: { en: "Cape Manzamo", zh: "万座毛景区" }, 
+                        activity: { en: "Cape Manzamo", zh: "万座毛景区（象鼻岩）" }, 
                         location: { en: "Onna Village", zh: "恩纳村" }, 
-                        note: { en: "Flat walk. New rest area equipped with full AC.", zh: "全平坦观景步道。新建的游客休息中心冷气充足，有舒适座椅供长辈歇脚。" }, 
-                        food: { en: "Okinawan treats at the rest center.", zh: "游客中心内的特色紫薯糕点、黑糖奶茶。" } 
+                        buy: { en: "Traditional Ryukyu glassware, artisan ceramic Shisa lion figures.", zh: "手造琉璃工艺杯、冲绳传统的彩色避邪风狮爷小摆件 (Shisa)。" }, 
+                        food: { en: "Okinawan purple sweet potato tarts, chilled brown sugar bubble milk tea.", zh: "新改建游客中心内的冲绳限定紫薯蛋挞、清凉香甜黑糖珍珠奶茶。" } 
                     },
                     { 
                         time: "17:30", 
                         activity: { en: "AEON Mall Okinawa Rycom 🛍️", zh: "永旺梦乐城 AEON Mall 🛍️" }, 
                         location: { en: "Kitanakagusuku", zh: "北中城村" }, 
-                        note: { en: "Large Mall. Highly recommend using shopping carts with integrated seats.", zh: "大型室内购物中心。建议进门先为长辈推一辆自带座椅的休闲购物推车，省时省力。" }, 
-                        food: { en: "Large comprehensive food court area.", zh: "美食广场：热腾腾的冲绳荞麦面、日式煎饺等。" } 
+                        buy: { en: "Japanese cosmetics, drug store hauls, tax-free clothing, Matcha snacks.", zh: "【购物天堂】药妆面膜、日本本土美妆、免税潮流服饰、抹茶限定零食。" }, 
+                        food: { en: "Okinawa Soba noodles, crisp pan-fried Gyoza plates, hot takoyaki.", zh: "商场巨型美食广场：热气腾腾的特色冲绳大排骨荞麦面、香脆煎饺。" } 
                     },
                     { 
                         time: "20:30", 
-                        activity: { en: "Return to Hotel Base", zh: "返回北谷酒店休息" }, 
-                        location: { en: "North Chatan", zh: "北谷" }, 
-                        note: { en: "Short and easy 15-min drive back to accommodation.", zh: "轻松开车 15 分钟即可返回酒店，买好的特产可以直接放车里。" }, 
-                        food: { en: "Short 15-min drive to comforting dinner options.", zh: "酒店附近的日式暖胃火锅或经典和风料理。" } 
+                        activity: { en: "Return to Hotel Base", zh: "返回北谷酒店" }, 
+                        location: { en: "North Chatan", zh: "北谷区域" }, 
+                        buy: { en: "Cold beers, Orion drafts, local snacks for midnight chats.", zh: "冲绳本地限定 Orion 冰镇啤酒、特色海盐浪花薯片。" }, 
+                        food: { en: "Comforting Sukiyaki hot pots, traditional charcoal yakitori options.", zh: "酒店附近的地道日式高汤涮涮锅，或者暖心炭火烤肉串。" } 
                     }
                 ]
             },
@@ -171,59 +192,59 @@
                 events: [
                     { 
                         time: "08:00", 
-                        activity: { en: "Depart Hotel", zh: "从酒店退房出发" }, 
+                        activity: { en: "Depart Hotel", zh: "酒店退房出发" }, 
                         location: { en: "Chatan", zh: "北谷" }, 
-                        note: { en: "Head South. Luggage safely packed inside the vehicle trunks.", zh: "行李全部收拾妥当上车，今天专程往那霸南部游玩。" }, 
-                        food: { en: "Quick snacks or on-the-go selections.", zh: "路边便利店的特色海苔午餐肉饭团。" } 
+                        buy: { en: "Grab unique vending machine localized drink items.", zh: "收集路边贩卖机限定冲绳香片茶、果汁。" }, 
+                        food: { en: "Quick Japanese rice balls (Onigiri) from convenience store stops.", zh: "打包便利店超人气海苔厚餐肉蛋大饭团。" } 
                     },
                     { 
                         time: "10:00", 
                         activity: { en: "Ryoshu Costume Experience at Chura Bijin 👘", zh: "琉装美人传统服饰体验 👘" }, 
-                        location: { en: "Naha", zh: "那霸" }, 
-                        note: { en: "Dedicated vehicle parking is close. Photo on cliff sides.", zh: "体验冲绳传统琉装。专用停车场离店面非常近，长辈不需要走太多路。" }, 
-                        food: { en: "Photo on cliff treats nearby.", zh: "体验店附近的精致手作传统糕点。" } 
+                        location: { en: "Naha", zh: "那霸市" }, 
+                        buy: { en: "Souvenir portrait photograph frames from the store collection.", zh: "精美的琉球传统服装纪念合影相册相框。" }, 
+                        food: { en: "Traditional red bean pastries, iced floral blossom teas.", zh: "体验店附近提供的消暑手作日式红豆糕点、花草冰茶。" } 
                     },
                     { 
                         time: "11:00", 
-                        activity: { en: "Naminoue Shrine", zh: "波上宫神社打卡" }, 
-                        location: { en: "Naha", zh: "那霸" }, 
-                        note: { en: "Beautiful historic beach cliffside shine view.", zh: "悬崖上的绝美海景神社，穿上传统服饰全家一起拍大合照最合适。" }, 
-                        food: { en: "Traditional visual treats.", zh: "古早味大福、日式甜年糕。" } 
+                        activity: { en: "Naminoue Shrine", zh: "波上宫悬崖神社" }, 
+                        location: { en: "Naha", zh: "那霸市" }, 
+                        buy: { en: "Shrine safety amulets (Omamori) shaped like school bags or waves.", zh: "【御守必买】波上宫标志性的海浪图样交通安全御守、健康开运御守。" }, 
+                        food: { en: "Traditional hand-rolled mochi sweets from old street corner stalls.", zh: "神社阶梯旁老字号手作软糯红豆大福、甜糯米团子。" } 
                     },
                     { 
                         time: "13:30", 
-                        activity: { en: "Kokusai Street", zh: "国际通老街慢行" }, 
-                        location: { en: "Naha", zh: "那霸" }, 
-                        note: { en: "Walk short distance. Buy small gifts and unique souvenirs.", zh: "主要逛平坦的主干道，步调放慢，一路上有很多带空调的特产小店。" }, 
-                        food: { en: "Walk short distance. Buy small gifts / treats.", zh: "经典的 Blue Seal 冰淇淋、清爽冰镇香片茶。" } 
+                        activity: { en: "Kokusai Street", zh: "国际通老街漫步" }, 
+                        location: { en: "Naha", zh: "那霸市中心" }, 
+                        buy: { en: "Yukashio sea salt snacks, Calbee Okinawa limited sweet potato chips.", zh: "【手信大买】雪盐小饼干、卡乐比 (Calbee) 冲绳限定三色紫薯条、黑糖年糕。" }, 
+                        food: { en: "Blue Seal Ice Cream (Okinawa Salt Cookie flavor), crisp sugar churros.", zh: "打卡经典的 Blue Seal 冰淇淋（大推冲绳盐饼干风味）、冰镇香片茶。" } 
                     },
                     { 
                         time: "14:30", 
                         activity: { en: "Makishi Public Market 🍱", zh: "第一牧志公设市场 🍱" }, 
-                        location: { en: "Naha", zh: "那霸" }, 
-                        note: { en: "Newly renovated clean indoor market setup with complete elevator facilities.", zh: "室内干净整洁且备有电梯。可在一楼挑选海鲜，直奔二楼让大厨现做现吃。" }, 
-                        food: { en: "Fresh custom seafood dining floor upstairs.", zh: "清蒸海鲜大餐、龙虾刺身、美味海鲜饭。" } 
+                        location: { en: "Naha", zh: "那霸老城市场" }, 
+                        buy: { en: "Dried seafood scallops, vacuum-packed premium Okinawan pork belly pieces.", zh: "顶级日式干贝海味、冲绳黑猪肉真空便携包。" }, 
+                        food: { en: "Fresh custom seafood feast cooked to order upstairs, giant lobster sashimi.", zh: "一楼挑海鲜上二楼现做：清蒸大龙虾、夜光贝刺身、爆炒海鲜大餐。" } 
                     },
                     { 
                         time: "16:00", 
-                        activity: { en: "DFS Outlet", zh: "DFS 免税大厦购物" }, 
-                        location: { en: "Naha", zh: "那霸" }, 
-                        note: { en: "Excellent retail window shopping if you have extra time.", zh: "大牌云集的全室内商场，走路轻松，若时间充裕可以让长辈坐着喝杯茶。" }, 
-                        food: { en: "DFS Outlet if got time coffee break.", zh: "商场内高级醇香咖啡、甜品千层蛋糕。" } 
+                        activity: { en: "DFS Outlet", zh: "DFS 环球免税店" }, 
+                        location: { en: "Naha", zh: "那霸新都心" }, 
+                        buy: { en: "Tax-free luxury bags, designer perfume sets, luxury watches.", zh: "免税大牌名包、名表、国际大牌限定香水彩妆礼盒。" }, 
+                        food: { en: "Premium iced siphon coffees, layered matcha crepe pastries.", zh: "大厦高级咖啡厅的冰镇手冲单品咖啡、法式抹茶千层蛋糕。" } 
                     },
                     { 
                         time: "18:30", 
-                        activity: { en: "Refuel & Return Car", zh: "加油并办理还车" }, 
+                        activity: { en: "Refuel & Return Car", zh: "车辆加油并办理归还" }, 
                         location: { en: "Bee Rent Chatan", zh: "北谷还车点" }, 
-                        note: { en: "CRITICAL TIME: Return car strictly before 18:30/19:00 window limits.", zh: "【特别重要】务必在 18:30 到 19:00 前将车辆加满油并归还至北谷 Bee Rent。" }, 
-                        food: { en: "Return car before 18:30/19:00 quick grabs.", zh: "车内暖心小饼干或便携零食。" } 
+                        buy: { en: "Final road trip regional beverage cans.", zh: "顺手带两罐自驾路途最爱的限定橘子汁饮料。" }, 
+                        food: { en: "Quick snacks near the gas station kiosks.", zh: "加油站超市里的脆皮香肠串、热乎肉包子。" } 
                     },
                     { 
                         time: "19:00", 
-                        activity: { en: "Farewell Dinner at American Village", zh: "美国村温馨告别海景晚餐" }, 
-                        location: { en: "American Village", zh: "美国村" }, 
-                        note: { en: "Sunset views near the hotel coastline on our final night.", zh: "依偎在美国村海边，一边看绝美落日夕阳一边吃大餐，庆祝冲绳段完美完结。" }, 
-                        food: { en: "Sunset views near hotel feasts.", zh: "顶级石垣牛烧肉或者地道琉球海鲜风味宴。" } 
+                        activity: { en: "Farewell Dinner at American Village", zh: "美国村海景告别晚餐" }, 
+                        location: { en: "American Village", zh: "美国村海滨" }, 
+                        buy: { en: "Handcrafted seaside sunset art postcards, beach style accessories.", zh: "美国村独立艺术家手绘的落日海景明信片、贝壳手作配饰。" }, 
+                        food: { en: "Premium Okinawan Ishigaki Wagyu beef barbecue feasts.", zh: "顶级冲绳石垣牛海景烧肉大餐，或者地道琉球风味海鲜盛宴。" } 
                     }
                 ]
             },
@@ -232,106 +253,107 @@
                 events: [
                     { 
                         time: "05:30", 
-                        activity: { en: "Check out from Hotel Chatan", zh: "清晨酒店退房" }, 
+                        activity: { en: "Check out from Hotel Chatan", zh: "清晨酒店退房出发" }, 
                         location: { en: "Hotel to Naha Airport", zh: "那霸机场方向" }, 
-                        note: { en: "Early flight prep. Keep your documentation easily accessible.", zh: "清晨集结包车前往机场，提前把护照和马航机票订单准备好。" }, 
-                        food: { en: "Early flight prep quick terminal bites.", zh: "机场大厅内的热松饼、经典三明治早点。" } 
+                        buy: { en: "Last-minute pocket warmer sets or travel items if needed.", zh: "便利店补充随身便携纸巾或出行保暖小贴件。" }, 
+                        food: { en: "Hot convenience store coffee, fresh terminal bakery items.", zh: "航站楼内的热拿铁咖啡、刚出炉的黄油牛角面包。" } 
                     },
                     { 
                         time: "08:00", 
                         activity: { en: "Naha Airport - Flight to Taipei ✈️", zh: "飞机起飞前往台北 ✈️" }, 
                         location: { en: "Naha ➔ Taoyuan", zh: "那霸飞往台北桃园" }, 
-                        note: { en: "Relax on flight. Catch up on extra morning sleep.", zh: "飞行时间短而平稳，长辈可以在飞机上安稳闭眼休息。" }, 
-                        food: { en: "Relax on flight hot airline catering options.", zh: "马航机上提供的热乎便餐点心。" } 
+                        buy: { en: "Exclusive regional flight tax-free souvenir packs.", zh: "民航飞机上限定销售的免税护肤礼盒。" }, 
+                        food: { en: "Airlines catering tray lunch service on the plane.", zh: "享用马航飞机上提供的温热机上简餐。" } 
                     },
                     { 
                         time: "08:45", 
-                        activity: { en: "Arrive Taoyuan Airport", zh: "顺利抵达桃园机场" }, 
+                        activity: { en: "Arrive Taoyuan Airport", zh: "顺利飞抵桃园机场" }, 
                         location: { en: "Terminal 1 or 2", zh: "第一或第二航站楼" }, 
-                        note: { en: "Charter driver meets the family directly at the main Arrival Hall.", zh: "台北专属大包车司机已在接机大厅举牌等候，直接上车，无需推重行李上下折腾。" }, 
-                        food: { en: "Charter driver meets at Arrival Hall with warm greetings.", zh: "地道的台式温热珍珠奶茶。" } 
+                        buy: { en: "Taiwan local 4G/5G high speed tourist internet SIM card.", zh: "机场大厅直接领取已订好的台湾高速全日无限流量上网卡。" }, 
+                        food: { en: "Authentic hot bubble milk tea right at airport lounge exit.", zh: "出关第一杯地道浓郁的台湾古早味珍珠奶茶。" } 
                     },
                     { 
                         time: "10:00", 
-                        activity: { en: "Hotel Relax III Pitstop", zh: "旅乐序三馆 寄放行李" }, 
-                        location: { en: "Hotel Relax 3", zh: "台北车站商圈" }, 
-                        note: { en: "Quick stop. Keep luggage stored in the car boot for efficiency.", zh: "在酒店柜台速存大件行李，人员无需折腾下车，尾箱塞满后我们直奔宜兰！" }, 
-                        food: { en: "Quick stop. Keep luggage in car boot snack runs.", zh: "车站附近的招牌现烤胡椒饼、香脆美味。" } 
+                        activity: { en: "Hotel Relax III Pitstop", zh: "旅乐序三馆 寄存行李" }, 
+                        location: { en: "Hotel Relax 3", zh: "台北车站" }, 
+                        buy: { en: "Pick up Taipei city tourist transit guide cards.", zh: "酒店前台顺手领取一份台北车站周边美食手绘地图。" }, 
+                        food: { en: "Famous crisp pork pepper buns from station corner shops.", zh: "打包台北车站老字号现烤香脆胡椒饼，车上趁热吃。" } 
                     },
                     { 
                         time: "13:30", 
                         activity: { en: "Red Lantern Duck Feast 🦆", zh: "红楼樱桃烤鸭大餐 🦆" }, 
                         location: { en: "Yilan", zh: "宜兰兰城晶英" }, 
-                        note: { en: "Pre-booked regional highlight meal. Time to relax and enjoy.", zh: "【顶级饕餮】全台最负盛名的樱桃鸭多吃，已经提前预订，长辈坐下即可享用。" }, 
-                        food: { en: "Red Lantern Duck multi-course menu choices.", zh: "绝美脆皮鸭肉、香喷喷的烤鸭握寿司。" } 
+                        buy: { en: "Exclusive five-grain savory duck oil condiments.", zh: "五星级中餐厅特制的精致佐餐小料、秘制鸭油伴手礼。" }, 
+                        food: { en: "Red Lantern legendary multi-course cherry roasted duck menu, crispy duck sushi.", zh: "【顶级烤鸭】招牌樱桃烤鸭五吃、外脆里嫩的烤鸭握寿司。" } 
                     },
                     { 
                         time: "15:00", 
-                        activity: { en: "Zhang Mei Ama’s Farm 🌾", zh: "张美阿嬷农场 🌾" }, 
-                        location: { en: "Yilan", zh: "宜兰县" }, 
-                        note: { en: "Feed friendly Capybaras. Great location for beautiful family photos.", zh: "平坦的日式风情农场。亲手喂治愈系水豚君和小鹿，是全家同乐拍照的最佳场所。" }, 
-                        food: { en: "Feed Capybaras. Great for photos and farm treats.", zh: "凭门票可以免费兑换现做的三星葱油饼、甜豆红豆饼。" } 
+                        activity: { en: "Zhang Mei Ama’s Farm 🌾", zh: "张美阿嬷农场体验 🌾" }, 
+                        location: { en: "Yilan", zh: "宜兰农场" }, 
+                        buy: { en: "Capybara themed accessories, local organic premium farm produce.", zh: "超级可爱的水豚君卡通挂件、农场特色有机手信。" }, 
+                        food: { en: "Fresh local Sanxing scallion pancakes, hot sweet red bean buns.", zh: "凭门票免费兑换现点现炸、葱香浓郁的宜兰特产三星葱油饼。" } 
                     },
                     { 
                         time: "17:30", 
-                        activity: { en: "Luodong Night Market", zh: "罗东夜市小吃行" }, 
+                        activity: { en: "Luodong Night Market", zh: "罗东夜市美食大巡礼" }, 
                         location: { en: "Yilan", zh: "宜兰罗东" }, 
-                        note: { en: "Walk near Red House setup. Browse comfortably for delicious treats.", zh: "台湾夜市风情初体验，包车停靠在最近的街边，走走停停吃小吃完全不累。" }, 
-                        food: { en: "Walk near Red House. Buy snacks / local signature foods.", zh: "招牌当归羊肉汤（暖胃滋补）、葱包肉、花生卷冰淇淋。" } 
+                        buy: { en: "Yilan Sanxing scallion crisps, dried fruit boxes.", zh: "宜兰标志性的高山三星葱酥饼干、手作古法金桔干。" }, 
+                        food: { en: "滋补当归羊肉汤, crisp scallion beef meat pastries, peanut ice cream rolls.", zh: "必吃：阿灶伯当归羊肉汤（暖胃首选）、包心粉圆、花生卷冰淇淋。" } 
                     },
                     { 
                         time: "20:00", 
-                        activity: { en: "Check-in Hotel Relax III & Rest", zh: "回台北正式入住旅馆" }, 
+                        activity: { en: "Check-in Hotel Relax III & Rest", zh: "返回台北旅馆正式入住" }, 
                         location: { en: "Hotel Relax 3", zh: "台北车站商圈" }, 
-                        note: { en: "End of day. Settle into the room for deep relaxation.", zh: "一整天充实行程结束，包车直达旅馆门口。长辈回房舒舒服服洗热水澡休息。" }, 
-                        food: { en: "End of day room snacks or simple teas.", zh: "台湾便利店的关东煮、现烫茶叶蛋。" } 
+                        buy: { en: "Taiwan local cosmetic masks, limited milk tea pints from 7-11.", zh: "便利店必买：纯萃喝奶茶系列、台湾果汁限定风味啤酒。" }, 
+                        food: { en: "Taiwanese hot braised oden soup bowls, traditional tea eggs.", zh: "下楼打包热乎乎的台式麻辣关东煮、香气四溢的茶叶蛋。" } 
                     },
                     { 
                         time: "23:00", 
-                        activity: { en: "Starbeary Kiap Kiap", zh: "深夜夹公仔小文娱（年轻人可选）" }, 
+                        activity: { en: "Starbeary Kiap Kiap", zh: "深夜夹公仔狂欢 (年轻人自选)" }, 
                         location: { en: "Taipei Arcade Street", zh: "台北街区" }, 
-                        note: { en: "Optional late-night arcade games for the youth while seniors sleep.", zh: "【长辈房内休息】年轻人精力旺盛可以下楼体验抓娃娃街的气氛。" }, 
-                        food: { en: "Late night sweet dessert treats.", zh: "深夜路边的手工冰糖芋圆豆花汤。" } 
+                        buy: { en: "Win popular anime figurines, plushies from game catchers.", zh: "【战利品】抓娃娃机里抓到的最新款限定动漫手办、超萌公仔玩偶。" }, 
+                        food: { en: "Taiwanese traditional iced bean curd jelly (Douhua), taro ball soup.", zh: "深夜甜品：路边手工冰糖芋圆手工豆花汤、红豆黑糖水。" } 
                     }
                 ]
             },
             "May 31": {
-                title: { en: "May 31 (Sun) - Jiufen Flat Entrance & Market Day", zh: "5月31日 (周日) - 九份高位平路直入 + 夜市大扫街" },
+                title: { en: "May 31 (Sun) - Jiufen Flat Entrance & Market Day", zh: "5月31日 (周日) - 九份高位平路直入 + 台北大采购" },
                 events: [
                     { 
                         time: "08:30", 
-                        activity: { en: "Traditional Breakfast", zh: "地道台式古早味早餐" }, 
+                        activity: { en: "Traditional Breakfast", zh: "台式正宗古早味早餐" }, 
                         location: { en: "Near Taipei Main", zh: "台北车站附近" }, 
-                        note: { en: "Fuhang Soy Milk or Zhen Fang delicious options.", zh: "品尝热乎乎的特色早点，让长辈的胃轻松无负担。" }, 
-                        food: { en: "Fuhang Soy Milk or Zhen Fang delicious egg crepes.", zh: "大名鼎鼎的阜杭豆浆（香浓咸豆浆、热油条）或真芳炭烤三明治。" } 
+                        buy: { en: "Packaged premium soy milk extract bottles.", zh: "老字号磨制纯正浓郁豆浆瓶装组合。" }, 
+                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zhen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治。" } 
                     },
                     { 
                         time: "10:15", 
-                        activity: { en: "Jiufen Old Street", zh: "九份老街怀旧慢行" }, 
+                        activity: { en: "Jiufen Old Street", zh: "九份老街怀旧复古慢行" }, 
                         location: { en: "Jiufen Mountain", zh: "新北瑞芳" }, 
-                        note: { en: "CRITICAL DIRECTION: Instruct the charter driver to use the high-elevation road drop-off point exclusively to walk into the town along flat terrain and avoid steep mountain stairs.", zh: "【⚠️长辈千万别爬楼梯】一定要吩咐包车司机直接开到「九份最高处的圣明宫路口」放下全家。这样我们就能直接从上往下走平坦老街，【完美避开九份所有夺命长石阶】，长辈散步极其轻松！" }, 
-                        food: { en: "Famous local taro ball desserts and sweet mountain tea items.", zh: "著名的阿柑姨芋圆或赖阿婆芋圆（软糯可口），山城景观观景茶楼。" } 
+                        note: { en: "CRITICAL DIRECTION: Instruct the charter driver to use the high-elevation road drop-off point exclusively to walk into the town along flat terrain and avoid steep mountain stairs.", zh: "【⚠️指令提示】必须嘱咐包车司机直接开到「九份最高处圣明宫路口」放下全家。这样可以直接从上往下走平坦老街，【完美避开九份所有夺命长台阶】。" }, 
+                        buy: { en: "Handmade ginger tea bricks, souvenir wooden postcards, historic sky lantern souvenirs.", zh: "九份手工黑糖生姜茶砖、复古木质风景明信片、十分小天灯挂件。" }, 
+                        food: { en: "A-Gan-Yi Taro Balls, Lai Ah Po Taro Balls, historical scenic teahouse menu.", zh: "经典的阿柑姨芋圆、赖阿婆芋圆（软糯Q弹），古董茶楼坐看山海绝景。" } 
                     },
                     { 
                         time: "14:30", 
                         activity: { en: "Ji Long Colourful Village Cafe ☕", zh: "正滨渔港彩虹屋 + 海景下午茶 ☕" }, 
-                        location: { en: "Keelung Coast", zh: "基隆沿海公路" }, 
-                        note: { en: "Stunning ocean views. Relax inside an AC cafe and take nice photographs.", zh: "网红彩色意式小渔港打卡点。挑一家景色极佳的冷气海景咖啡厅舒舒服服坐着聊天，看海拍全家福。" }, 
-                        food: { en: "Fresh coffee, fruits tea, and baked waffle platters.", zh: "现磨香浓咖啡、现烤外酥内软的水果华夫饼、冰镇水果茶。" } 
+                        location: { en: "Keelung Coast", zh: "基隆正滨渔港" }, 
+                        buy: { en: "Ocean theme artisanal coffee drip filter packs.", zh: "精美小众彩虹屋明信片、特色独立烘焙手冲咖啡豆。" }, 
+                        food: { en: "Fresh filter drip coffee, fruit sodas, freshly baked crispy waffle platters.", zh: "网红彩色小渔港海景冷气咖啡厅：醇香冰美式、水果冰淇淋华夫饼。" } 
                     },
                     { 
                         time: "17:30", 
-                        activity: { en: "Ximending + Carrefour Guilin 🛍️", zh: "西门町闲逛 + 家乐福伴手礼大采购 🛍️" }, 
+                        activity: { en: "Ximending + Carrefour Guilin 🛍️", zh: "西门町闲逛 + 家乐福手信终极狂购 🛍️" }, 
                         location: { en: "Wanhua District", zh: "台北万华区" }, 
-                        note: { en: "One-way continuous forward path walk to optimize energy levels.", zh: "开启单向不回头的顺畅观光动线。家乐福是全台特产最齐的一站式超市，买满后直接推上包车，无需手提受累。" }, 
-                        food: { en: "Ay-Chung Flour-Rice Noodles / fresh local fruits like Mango and Wax Apples.", zh: "西门町招牌阿宗面线，家乐福内的台湾本地香甜大芒果、红肉火龙果、莲雾。" } 
+                        buy: { en: "【MASSIVE SHOPPING】Chia Te Chia鳳梨酥, Yuki Nougat crackers, Taiwanese instant beef noodles, local teas.", zh: "【手信大买特买】佳德凤梨酥、微热山丘、三点一刻奶茶、满汉大餐牛肉面、一口牛轧糖饼干。" }, 
+                        food: { en: "Ay-Chung Flour-Rice Noodles, fresh local wax apples, premium sweet mango cuts.", zh: "西门町招牌阿宗面线，家乐福超市里买现切的台湾极品大芒果、清甜红莲雾。" } 
                     },
                     { 
                         time: "20:30", 
-                        activity: { en: "Return to Hotel Base & Settle", zh: "包车轻松送返旅馆" }, 
+                        activity: { en: "Return to Hotel Base & Settle", zh: "包车送回酒店打包" }, 
                         location: { en: "Hotel Relax III", zh: "旅乐序三馆" }, 
-                        note: { en: "Direct front lobby drop off. Safe and comfortable.", zh: "战利品直接打包塞进尾箱，直接送达酒店门口，长辈安稳回房休息。" }, 
-                        food: { en: "Pack your favorite local night treats back to the room.", zh: "打包带回酒店的香脆台湾盐酥鸡、招牌黑糖奶茶大夜宵。" } 
+                        buy: { en: "Box packing ropes, heavy-duty parcel tapes for airport luggage boxing.", zh: "准备好打包纸箱、行李打包带，将所有的台湾零食完美封箱。" }, 
+                        food: { en: "Taiwanese traditional salt & pepper crispy fried chicken, brown sugar boba tea milk options.", zh: "外带回房间：台湾超香豪大大鸡排、正宗盐酥鸡、古早味冬瓜茶大夜宵。" } 
                     }
                 ]
             },
@@ -340,24 +362,24 @@
                 events: [
                     { 
                         time: "08:00", 
-                        activity: { en: "Chengzhong Market Exploration", zh: "台北老城中传统市场体验" }, 
+                        activity: { en: "Chengzhong Market Exploration", zh: "台北老城中传统集市体验" }, 
                         location: { en: "Old Taipei Market Quarter", zh: "台北市中心" }, 
-                        note: { en: "Safe, slower morning walking pace to see authentic old town everyday life under shaded awnings.", zh: "【体验纯正台北慢生活】就在酒店隔壁，全是有遮阳蓬的平坦小巷。长辈最爱逛这种充满生活气息的地方，看看台湾本地人的水果蔬菜市集。" }, 
-                        food: { en: "Handcrafted traditional soy curd jelly, noodles, or local breads.", zh: "纯手工古早味冰豆花、地道红烧牛肉面、老字号葱油饼。" } 
+                        buy: { en: "Fresh local Taiwanese sun-ripened fruits, traditional handmade market snacks.", zh: "带一些新鲜的台湾在地高山水果（释迦、芭乐）、市场手作黑糖糕。" }, 
+                        food: { en: "Handcrafted traditional soy curd jelly (Douhua), old-fashioned beef noodles, pan scallion bread.", zh: "老字号传统纯手工古早味冰豆花、汤头浓郁的红烧牛肉面、现烤葱油饼。" } 
                     },
                     { 
                         time: "11:45", 
-                        activity: { en: "Check Out & Airport Charter Run", zh: "退房集合，包车出发机场" }, 
+                        activity: { en: "Check Out & Airport Charter Run", zh: "酒店退房，大包车出发机场" }, 
                         location: { en: "Hotel Relax III ➔ Taoyuan", zh: "酒店大堂" }, 
-                        note: { en: "Ensure prompt assembly. Strict 12:30 PM airport arrival target to catch our international flight smoothly.", zh: "请全家务必在 11:45 前将大行李推至大堂。司机准时在大门口等候，确保 12:30 准时到机场办理托运与退税。" }, 
-                        food: { en: "Pack classic railway style pork chop bento boxes for the trip.", zh: "顺手带上几盒经典的香喷喷台铁排骨便当车上吃。" } 
+                        buy: { en: "Final check for airline booking papers.", zh: "检查随身退税单据与护照原件。" }, 
+                        food: { en: "Pack classic railway-style pork chop bento boxes for the road.", zh: "外带上车：最出名、香喷喷的台铁排骨便当（木盒经典款）。" } 
                     },
                     { 
                         time: "12:30", 
-                        activity: { en: "Airport Flight Check-In", zh: "桃园机场航站楼托运与登机" }, 
+                        activity: { en: "Airport Flight Check-In", zh: "桃园机场托运、退税与登机" }, 
                         location: { en: "Taoyuan Terminal", zh: "台北桃园机场大厅" }, 
-                        note: { en: "Drop off heavy luggage boxes, pass through passport security check, and sit comfortably at our gate wing.", zh: "轻松托运大件行李箱，轻装过海关。距离 15:00 飞机起飞时间充裕，长辈可以在登机口坐着闭目养神，年轻人可做最后采购。" }, 
-                        food: { en: "Final delicious round of local Pearl Milk Tea or hot airport snacks.", zh: "机场特色餐厅享用午餐，喝最后一杯正宗珍珠奶茶，开心回马！" } 
+                        buy: { en: "Airport limited solar cake souvenirs, final tax-free cosmetic packs.", zh: "机场免税店最后补漏：太阳饼、裕珍馨奶油酥饼、顶级免税烟酒。" }, 
+                        food: { en: "Final delicious round of local Pearl Milk Tea, warm airport terminal noodle meals.", zh: "在候机大厅吃美味牛肉面，喝最后一杯正宗台式珍珠奶茶，开心回马！" } 
                     }
                 ]
             }
@@ -436,10 +458,19 @@
                         </div>
                         ` : ''}
 
+                        ${item.note ? `
+                        <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-900 flex items-start space-x-2 pl-3">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600 mt-0.5 text-sm"></i>
+                            <div>${item.note[currentLang]}</div>
+                        </div>
+                        ` : ''}
+
                         <div class="grid grid-cols-1 gap-2.5 pt-1 pl-2 text-xs">
-                            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                <span class="font-bold text-slate-500 block mb-0.5 uppercase tracking-wider text-[10px]">💡 ${labelTranslations[currentLang].note}</span>
-                                <p class="text-slate-700 font-medium leading-relaxed">${item.note[currentLang]}</p>
+                            <div class="bg-amber-50/40 p-2.5 rounded-xl border border-amber-100">
+                                <span class="font-bold text-amber-600 block mb-0.5 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                                    <i class="fa-solid fa-bag-shopping"></i> ${labelTranslations[currentLang].buy}
+                                </span>
+                                <p class="text-slate-700 font-medium leading-relaxed">${item.buy[currentLang]}</p>
                             </div>
                             <div class="bg-rose-50/50 p-2.5 rounded-xl border border-rose-100/70">
                                 <span class="font-bold text-rose-600 block mb-0.5 uppercase tracking-wider text-[10px] flex items-center gap-1">
