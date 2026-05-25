@@ -39,14 +39,14 @@
                     <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2" id="weather-title">
                         <i class="fa-solid fa-cloud-sun text-blue-600"></i> Live Location Weather
                     </h2>
-                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Fetching live data...</span>
+                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Live</span>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase id-okinawa">Okinawa</p>
                             <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">--°C</p>
-                            <p class="text-xs text-slate-600 font-medium" id="oki-cond">Loading...</p>
+                            <p class="text-xs text-slate-600 font-medium id-cond-oki" id="oki-cond">Loading...</p>
                         </div>
                         <div id="oki-icon-box" class="text-3xl text-amber-400">
                             <i class="fa-solid fa-circle-notch animate-spin text-slate-300"></i>
@@ -56,7 +56,7 @@
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase id-taipei">Taipei</p>
                             <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">--°C</p>
-                            <p class="text-xs text-slate-600 font-medium" id="tpe-cond">Loading...</p>
+                            <p class="text-xs text-slate-600 font-medium id-cond-tpe" id="tpe-cond">Loading...</p>
                         </div>
                         <div id="tpe-icon-box" class="text-3xl text-sky-400">
                             <i class="fa-solid fa-circle-notch animate-spin text-slate-300"></i>
@@ -117,7 +117,6 @@
         let currentLang = 'en';
         let activeDay = "May 27";
 
-        // Coordinates database for live forecast tracking mapping
         const locationCoords = {
             okinawa: { lat: 26.2124, lon: 127.6809 },
             taipei: { lat: 25.0330, lon: 121.5654 }
@@ -192,6 +191,9 @@
             ]
         };
 
+        // GLOBAL CACHE FOR TAB BAR COOLDOWN TEMPERATURE STRINGS
+        let liveCacheWeather = { oki: "--°C", tpe: "--°C", okiIcon: "⏳", tpeIcon: "⏳" };
+
         const tripData = {
             "May 27": {
                 title: { en: "May 27 (Wed) - Arrive Okinawa", zh: "5月27日 (周三) - 抵达冲绳" },
@@ -260,7 +262,7 @@
                         duration: { en: "Drive from Chatan to Aquarium: ~1h 15m", zh: "自驾从北谷到北部水族馆：车程约 1 小时 15 分钟" },
                         buy: { en: "Whale shark plushies, aquarium capsule toys, exclusive marine keychains.", zh: "【特色必买】超萌大鲸鲨毛绒玩偶、水族馆限定精美扭蛋、海洋风钥匙扣。" }, 
                         shows: { en: "Dolphin Show (Okichan Theater) runs at 11:30 & 13:00. Plan your internal path accordingly!", zh: "【海豚表演提醒】主剧场表演时间为 11:30 和 13:00，请注意安排游览路线！" },
-                        food: { en: "Enjoy local pork cutlet sets or ocean pasta while dining inside aquarium options.", zh: "在大水槽旁的餐厅一边看鲸鲨一边享用酥脆日式炸猪排饭、海鲜义大利面。" } 
+                        food: { en: "Enjoy local pork cutlet sets or ocean pasta while dining inside aquarium options.", zh: "在大水槽旁的餐厅一边看鲸鲨边享用酥脆日式炸猪排饭、海鲜义大利面。" } 
                     },
                     { 
                         time: "14:30", 
@@ -455,7 +457,7 @@
                         location: { en: "Near Taipei Main", zh: "台北车站附近" }, 
                         duration: { en: "5 mins walk", zh: "步行仅需 5 分钟" },
                         buy: { en: "Packaged premium soy milk extract bottles.", zh: "老字号磨制纯正浓郁豆浆瓶装组合。" }, 
-                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
+                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zhen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
                     },
                     { 
                         time: "10:15", 
@@ -525,10 +527,6 @@
             }
         };
 
-        // GLOBAL CACHE FOR TAB BAR COOLDOWN TEMPERATURE STRINGS
-        let liveCacheWeather = { oki: "27°C", tpe: "25°C", okiIcon: "⛅", tpeIcon: "🌧️" };
-
-        // TRUE LIVE OPEN-METEO WEATHER REFRESH SYSTEM
         async function fetchLiveWeather() {
             try {
                 const okiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.okinawa.lat}&longitude=${locationCoords.okinawa.lon}&current=temperature_2m,weather_code&timezone=auto`;
@@ -543,7 +541,6 @@
                     const okiTemp = Math.round(okiData.current.temperature_2m) + "°C";
                     const tpeTemp = Math.round(tpeData.current.temperature_2m) + "°C";
 
-                    document.getElementById('weather-oki-temp')?.setHTML(okiTemp); 
                     document.getElementById('oki-temp').innerText = okiTemp;
                     document.getElementById('tpe-temp').innerText = tpeTemp;
 
@@ -556,13 +553,13 @@
                     document.getElementById('oki-icon-box').innerHTML = okiMeta.icon;
                     document.getElementById('tpe-icon-box').innerHTML = tpeMeta.icon;
 
-                    // Cache structural settings for tab labels sync
+                    // SYNCED: Save real temperatures and weather tokens directly into the shared cache array
                     liveCacheWeather.oki = okiTemp;
                     liveCacheWeather.tpe = tpeTemp;
                     liveCacheWeather.okiIcon = okiMeta.symbol;
                     liveCacheWeather.tpeIcon = tpeMeta.symbol;
 
-                    renderTabs(); // Refresh the horizontal tabs to print the newly fetched conditions
+                    renderTabs(); // Refresh layout immediately to attach real weather indicators onto dates
                 }
             } catch (err) {
                 console.error("Weather channel request interrupted:", err);
@@ -661,7 +658,7 @@
                 const isActive = day === activeDay;
                 const targetRegion = tripData[day].region;
                 
-                // Fetch cached live weather properties mapped to this day's location layout
+                // SYNCED IN LINE: Read live tracked parameters instantly to attach values into date layouts
                 const displayTemp = targetRegion === 'okinawa' ? liveCacheWeather.oki : liveCacheWeather.tpe;
                 const displayIcon = targetRegion === 'okinawa' ? liveCacheWeather.okiIcon : liveCacheWeather.tpeIcon;
 
@@ -670,10 +667,10 @@
                     isActive ? 'bg-blue-600 text-white shadow-md scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
                 }`;
                 
-                // NEW: Embedded weather token and live temperature values injected inside each day button layout
+                // Connected variables show symbol + celsius accurately beside the date string!
                 btn.innerHTML = `
                     <span>${day}</span>
-                    <span class="text-[10px] opacity-80 font-medium bg-slate-100/10 px-1 rounded">
+                    <span class="text-[10px] opacity-90 font-semibold bg-slate-100/10 px-1 py-0.5 rounded flex items-center gap-0.5">
                         ${displayIcon} ${displayTemp}
                     </span>
                 `;
@@ -809,7 +806,6 @@
             renderTabs();
             renderItinerary();
             fetchLiveWeather();
-            // Automatically poll and fetch active parameters every 5 minutes
             setInterval(fetchLiveWeather, 300000);
         };
     </script>
