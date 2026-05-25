@@ -39,24 +39,28 @@
                     <h2 class="font-bold text-slate-700 text-sm tracking-wide uppercase flex items-center gap-2" id="weather-title">
                         <i class="fa-solid fa-cloud-sun text-blue-600"></i> Live Location Weather
                     </h2>
-                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Live</span>
+                    <span class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full" id="weather-update-time">Fetching live data...</span>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gradient-to-br from-sky-50 to-blue-50 p-3 rounded-xl border border-sky-100 flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase id-okinawa">Okinawa</p>
-                            <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">27°C</p>
-                            <p class="text-xs text-slate-600 font-medium id-cond-oki" id="oki-cond">Partly Cloudy</p>
+                            <p class="text-2xl font-black text-slate-800 mt-1" id="oki-temp">--°C</p>
+                            <p class="text-xs text-slate-600 font-medium" id="oki-cond">Loading...</p>
                         </div>
-                        <i class="fa-solid fa-cloud-sun text-3xl text-amber-400"></i>
+                        <div id="oki-icon-box" class="text-3xl text-amber-400">
+                            <i class="fa-solid fa-circle-notch animate-spin text-slate-300"></i>
+                        </div>
                     </div>
                     <div class="bg-gradient-to-br from-indigo-50 to-blue-50 p-3 rounded-xl border border-indigo-100 flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase id-taipei">Taipei</p>
-                            <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">25°C</p>
-                            <p class="text-xs text-slate-600 font-medium id-cond-tpe" id="tpe-cond">Passing Shower</p>
+                            <p class="text-2xl font-black text-slate-800 mt-1" id="tpe-temp">--°C</p>
+                            <p class="text-xs text-slate-600 font-medium" id="tpe-cond">Loading...</p>
                         </div>
-                        <i class="fa-solid fa-cloud-showers-heavy text-3xl text-sky-400"></i>
+                        <div id="tpe-icon-box" class="text-3xl text-sky-400">
+                            <i class="fa-solid fa-circle-notch animate-spin text-slate-300"></i>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -112,6 +116,12 @@
     <script>
         let currentLang = 'en';
         let activeDay = "May 27";
+
+        // Coordinates database for live forecast tracking mapping
+        const locationCoords = {
+            okinawa: { lat: 26.2124, lon: 127.6809 },
+            taipei: { lat: 25.0330, lon: 121.5654 }
+        };
 
         const labelTranslations = {
             en: {
@@ -185,6 +195,7 @@
         const tripData = {
             "May 27": {
                 title: { en: "May 27 (Wed) - Arrive Okinawa", zh: "5月27日 (周三) - 抵达冲绳" },
+                region: "okinawa",
                 events: [
                     { 
                         time: "05:30", 
@@ -199,7 +210,6 @@
                         activity: { en: "Depart from KL (MH366) ✈", zh: "吉隆坡起飞出发 (马航 MH366) ✈" }, 
                         location: { en: "KLIA T1", zh: "吉隆坡国际机场 T1" }, 
                         duration: { en: "Flight duration: Approx 6 hours", zh: "飞行耗时约 6 小时" },
-                        // ACTUAL AIRLINE FLIGHT DATA STRUCTURE
                         flightTracker: { flightNo: "MH 366", targetDate: "2026-05-27", sched: "09:15", defTerm: "1", defGate: "C22" },
                         buy: { en: "In-flight duty-free exclusive regional items.", zh: "马航机上免税专属限定旅行周边。" }, 
                         food: { en: "Malaysia Airlines hot chicken or seafood lunch option onboard.", zh: "享用马航提供的空中热食午餐（提供鸡肉或海鲜选项，无牛肉）。" } 
@@ -233,6 +243,7 @@
             },
             "May 28": {
                 title: { en: "May 28 (Thu) - Aquarium & North Coast", zh: "5月28日 (周四) - 水族馆与北部海岸" },
+                region: "okinawa",
                 events: [
                     { 
                         time: "07:30", 
@@ -287,6 +298,7 @@
             },
             "May 29": {
                 title: { en: "May 29 (Fri) - Southern Culture & Kimono Run", zh: "5月29日 (周五) - 南部文化与传统服饰体验" },
+                region: "okinawa",
                 events: [
                     { 
                         time: "08:00", 
@@ -356,6 +368,7 @@
             },
             "May 30": {
                 title: { en: "May 30 (Sat) - Transit to Taipei & Yilan Tour", zh: "5月30日 (周六) - 飞往台北 + 宜兰包车一日游" },
+                region: "taipei",
                 events: [
                     { 
                         time: "05:30", 
@@ -370,7 +383,6 @@
                         activity: { en: "Naha Airport - Flight to Taipei (Peach MM921) ✈", zh: "飞机起飞前往台北 (乐桃航空 MM921) ✈" }, 
                         location: { en: "Naha ➔ Taoyuan T1", zh: "那霸飞往台北桃园 T1" }, 
                         duration: { en: "Flight duration: 1h 30m", zh: "飞行耗时约 1 小时 30 分钟" },
-                        // UPDATED TO PEACH MM921
                         flightTracker: { flightNo: "MM 921", targetDate: "2026-05-30", sched: "08:00", defTerm: "1", defGate: "81" },
                         buy: { en: "Exclusive regional flight tax-free souvenir packs.", zh: "民航飞机上限定销售的免税护肤礼盒。" }, 
                         food: { en: "Airlines catering tray lunch service on the plane.", zh: "享用飞机上提供的温热机上简餐。" } 
@@ -435,6 +447,7 @@
             },
             "May 31": {
                 title: { en: "May 31 (Sun) - Jiufen Flat Entrance & Market Day", zh: "5月31日 (周日) - 九份高位平路直入 + 台北大采购" },
+                region: "taipei",
                 events: [
                     { 
                         time: "08:30", 
@@ -442,7 +455,7 @@
                         location: { en: "Near Taipei Main", zh: "台北车站附近" }, 
                         duration: { en: "5 mins walk", zh: "步行仅需 5 分钟" },
                         buy: { en: "Packaged premium soy milk extract bottles.", zh: "老字号磨制纯正浓郁豆浆瓶装组合。" }, 
-                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zhen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
+                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
                     },
                     { 
                         time: "10:15", 
@@ -481,6 +494,7 @@
             },
             "June 1": {
                 title: { en: "June 1 (Mon) - Old Market Charm & Departure Home", zh: "6月1日 (周一) - 台北老城市场体验 + 顺利回马" },
+                region: "taipei",
                 events: [
                     { 
                         time: "08:00", 
@@ -503,7 +517,6 @@
                         activity: { en: "Airport Flight Check-In", zh: "桃园机场托运、退税与登机" }, 
                         location: { en: "Taoyuan Terminal 1", zh: "台北桃园机场大厅" }, 
                         duration: { en: "Flight duration to KL: 4h 45m", zh: "桃园飞往吉隆坡：飞行耗时约 4 小时 45 分钟" },
-                        // UPDATED TO FINAL DEPARTURE FLIGHT MH367
                         flightTracker: { flightNo: "MH 367", targetDate: "2026-06-01", sched: "15:10", defTerm: "1", defGate: "A9" },
                         buy: { en: "Airport limited solar cake souvenirs, final tax-free cosmetic packs.", zh: "机场免税店最后补漏：太阳饼、裕珍馨奶油酥饼、顶级免税烟酒。" }, 
                         food: { en: "Final delicious round of local Pearl Milk Tea, warm airport terminal seafood meals.", zh: "在候机大厅吃美味海鲜面，喝最后一杯正宗台式珍珠奶茶，开心回马！" } 
@@ -511,6 +524,62 @@
                 ]
             }
         };
+
+        // GLOBAL CACHE FOR TAB BAR COOLDOWN TEMPERATURE STRINGS
+        let liveCacheWeather = { oki: "27°C", tpe: "25°C", okiIcon: "⛅", tpeIcon: "🌧️" };
+
+        // TRUE LIVE OPEN-METEO WEATHER REFRESH SYSTEM
+        async function fetchLiveWeather() {
+            try {
+                const okiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.okinawa.lat}&longitude=${locationCoords.okinawa.lon}&current=temperature_2m,weather_code&timezone=auto`;
+                const tpeUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.taipei.lat}&longitude=${locationCoords.taipei.lon}&current=temperature_2m,weather_code&timezone=auto`;
+
+                const [okiRes, tpeRes] = await Promise.all([fetch(okiUrl), fetch(tpeUrl)]);
+                
+                if (okiRes.ok && tpeRes.ok) {
+                    const okiData = await okiRes.json();
+                    const tpeData = await tpeRes.json();
+
+                    const okiTemp = Math.round(okiData.current.temperature_2m) + "°C";
+                    const tpeTemp = Math.round(tpeData.current.temperature_2m) + "°C";
+
+                    document.getElementById('weather-oki-temp')?.setHTML(okiTemp); 
+                    document.getElementById('oki-temp').innerText = okiTemp;
+                    document.getElementById('tpe-temp').innerText = tpeTemp;
+
+                    const okiMeta = parseWMO(okiData.current.weather_code);
+                    const tpeMeta = parseWMO(tpeData.current.weather_code);
+
+                    document.getElementById('oki-cond').innerText = currentLang === 'en' ? okiMeta.en : okiMeta.zh;
+                    document.getElementById('tpe-cond').innerText = currentLang === 'en' ? tpeMeta.en : tpeMeta.zh;
+
+                    document.getElementById('oki-icon-box').innerHTML = okiMeta.icon;
+                    document.getElementById('tpe-icon-box').innerHTML = tpeMeta.icon;
+
+                    // Cache structural settings for tab labels sync
+                    liveCacheWeather.oki = okiTemp;
+                    liveCacheWeather.tpe = tpeTemp;
+                    liveCacheWeather.okiIcon = okiMeta.symbol;
+                    liveCacheWeather.tpeIcon = tpeMeta.symbol;
+
+                    renderTabs(); // Refresh the horizontal tabs to print the newly fetched conditions
+                }
+            } catch (err) {
+                console.error("Weather channel request interrupted:", err);
+            }
+            const now = new Date();
+            const prefix = labelTranslations[currentLang].updated;
+            document.getElementById('weather-update-time').innerText = `${prefix} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        }
+
+        function parseWMO(code) {
+            if (code === 0) return { en: "Clear Sky", zh: "晴朗", icon: '<i class="fa-solid fa-sun text-amber-500"></i>', symbol: "☀️" };
+            if (code >= 1 && code <= 3) return { en: "Partly Cloudy", zh: "多云", icon: '<i class="fa-solid fa-cloud-sun text-slate-400"></i>', symbol: "⛅" };
+            if (code >= 45 && code <= 48) return { en: "Foggy", zh: "有雾", icon: '<i class="fa-solid fa-smog text-slate-300"></i>', symbol: "🌫️" };
+            if (code >= 51 && code <= 67) return { en: "Drizzle", zh: "毛毛雨", icon: '<i class="fa-solid fa-cloud-rain text-sky-400"></i>', symbol: "🌦️" };
+            if (code >= 80 && code <= 82) return { en: "Passing Showers", zh: "阵雨", icon: '<i class="fa-solid fa-cloud-showers-heavy text-blue-400"></i>', symbol: "🌧️" };
+            return { en: "Rainy", zh: "降雨天气", icon: '<i class="fa-solid fa-cloud-bolt text-indigo-500"></i>', symbol: "⛈️" };
+        }
 
         function switchView(viewName) {
             const itinView = document.getElementById('itinerary-view');
@@ -560,14 +629,6 @@
             });
         }
 
-        function updateLiveWeather() {
-            document.getElementById('oki-temp').innerText = (26 + Math.floor(Math.random() * 3)) + "°C";
-            document.getElementById('tpe-temp').innerText = (24 + Math.floor(Math.random() * 3)) + "°C";
-            const now = new Date();
-            const prefix = labelTranslations[currentLang].updated;
-            document.getElementById('weather-update-time').innerText = `${prefix} ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-        }
-
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             document.getElementById('lang-toggle').innerText = currentLang === 'en' ? '中文' : 'English';
@@ -585,7 +646,7 @@
             document.getElementById('nav-label-itinerary').innerText = labelTranslations[currentLang].lblItin;
             document.getElementById('nav-label-checklist').innerText = labelTranslations[currentLang].lblChk;
 
-            updateLiveWeather();
+            fetchLiveWeather();
             renderTabs();
             renderItinerary();
             if(!document.getElementById('checklist-view').classList.contains('hidden')) {
@@ -598,11 +659,25 @@
             container.innerHTML = '';
             Object.keys(tripData).forEach(day => {
                 const isActive = day === activeDay;
+                const targetRegion = tripData[day].region;
+                
+                // Fetch cached live weather properties mapped to this day's location layout
+                const displayTemp = targetRegion === 'okinawa' ? liveCacheWeather.oki : liveCacheWeather.tpe;
+                const displayIcon = targetRegion === 'okinawa' ? liveCacheWeather.okiIcon : liveCacheWeather.tpeIcon;
+
                 const btn = document.createElement('button');
-                btn.className = `px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 ${
-                    isActive ? 'bg-blue-600 text-white shadow-sm scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
+                btn.className = `px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 flex items-center space-x-1.5 ${
+                    isActive ? 'bg-blue-600 text-white shadow-md scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
                 }`;
-                btn.innerText = day;
+                
+                // NEW: Embedded weather token and live temperature values injected inside each day button layout
+                btn.innerHTML = `
+                    <span>${day}</span>
+                    <span class="text-[10px] opacity-80 font-medium bg-slate-100/10 px-1 rounded">
+                        ${displayIcon} ${displayTemp}
+                    </span>
+                `;
+                
                 btn.onclick = () => {
                     activeDay = day;
                     renderItinerary();
@@ -613,7 +688,6 @@
             document.getElementById('current-date-badge').innerText = activeDay;
         }
 
-        // CUSTOM TIME MANAGEMENT PROCESSING LOGIC
         function getFlightStatus(tracker) {
             const now = new Date();
             const year = now.getFullYear();
@@ -621,7 +695,6 @@
             const date = String(now.getDate()).padStart(2, '0');
             const todayString = `${year}-${month}-${date}`;
 
-            // Check if current device time matches actual scheduled travel day
             if (todayString !== tracker.targetDate) {
                 return {
                     term: tracker.defTerm,
@@ -630,7 +703,6 @@
                     color: "text-blue-400"
                 };
             } else {
-                // Real-time tracking mock sequence running dynamically on the targeted day
                 return {
                     term: tracker.defTerm,
                     gate: tracker.defGate,
@@ -685,7 +757,7 @@
                         
                         <div class="flex justify-between items-start pl-2">
                             <div>
-                                <span class="inline-block bg-teal-50 text-blue-700 text-xs font-extrabold px-2 py-0.5 rounded-md mb-1 shadow-xs">${item.time}</span>
+                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-extrabold px-2 py-0.5 rounded-md mb-1 shadow-xs">${item.time}</span>
                                 <h3 class="font-bold text-slate-800 text-base leading-tight">${item.activity[currentLang]}</h3>
                                 <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
                                     <i class="fa-solid fa-location-dot text-rose-500"></i> ${item.location[currentLang]}
@@ -736,8 +808,9 @@
         window.onload = () => {
             renderTabs();
             renderItinerary();
-            updateLiveWeather();
-            setInterval(updateLiveWeather, 30000);
+            fetchLiveWeather();
+            // Automatically poll and fetch active parameters every 5 minutes
+            setInterval(fetchLiveWeather, 300000);
         };
     </script>
 </body>
