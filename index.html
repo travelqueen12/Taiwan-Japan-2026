@@ -21,6 +21,9 @@
             </div>
             
             <div class="flex items-center space-x-2">
+                <button id="admin-toggle" onclick="toggleAdminMode()" class="bg-blue-900/50 hover:bg-blue-900 text-white px-2 py-1 rounded-lg text-xs font-semibold">
+                    <i class="fa-solid fa-user-gear"></i>
+                </button>
                 <button id="lang-toggle" onclick="toggleLanguage()" class="bg-orange-500 hover:bg-orange-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold shadow-xs transition-all active:scale-95">
                     中文
                 </button>
@@ -116,6 +119,7 @@
     <script>
         let currentLang = 'en';
         let activeDay = "May 27";
+        let adminModeActive = false; // Toggle state for on-the-go airport corrections
 
         const locationCoords = {
             okinawa: { lat: 26.2124, lon: 127.6809 },
@@ -134,17 +138,11 @@
                 okinawa: "Okinawa",
                 taipei: "Taipei",
                 transitTime: "⏱️ Travel Duration:",
-                flightPanel: "✈️ Live Flight Tracking",
+                flightPanel: "✈ Live Flight Info",
                 gate: "Gate",
                 terminal: "Terminal",
                 status: "Status",
-                scheduled: "Scheduled",
-                chkTitle: "Travel Checklists",
-                chkDesc: "Tap items to mark them off as you prepare!",
-                secBring: "What to Bring (🎒 行李打包清单)",
-                secBuy: "Shopping Checklist (🛍️ 必买特产要点)",
-                lblItin: "Itinerary",
-                lblChk: "Checklists"
+                scheduled: "Scheduled"
             },
             zh: {
                 title: "2026 家族温馨之旅",
@@ -157,17 +155,11 @@
                 okinawa: "冲绳",
                 taipei: "台北",
                 transitTime: "⏱️ 预计车程 / 交通耗时:",
-                flightPanel: "✈️ 航班状态实时追踪",
+                flightPanel: "✈ 航班信息实时状态",
                 gate: "登机口",
                 terminal: "航站楼",
                 status: "状态",
-                scheduled: "计划起飞",
-                chkTitle: "出行备忘清单",
-                chkDesc: "点击勾选框，轻松核对出门物品与购物目标！",
-                secBring: "行李打包准备 (🎒 必带物品)",
-                secBuy: "冲绳/台北特产备忘 (🛍️ 必买清单)",
-                lblItin: "日程路线",
-                lblChk: "备忘清单"
+                scheduled: "计划起飞"
             }
         };
 
@@ -191,11 +183,27 @@
             ]
         };
 
+        const dateWeatherMap = {
+            "2026-05-27": { temp: "29°C", symbol: "☁️" },
+            "2026-05-28": { temp: "28°C", symbol: "⛅" },
+            "2026-05-29": { temp: "27°C", symbol: "🌧️" },
+            "2026-05-30": { temp: "29°C", symbol: "☀️" },
+            "2026-05-31": { temp: "34°C", symbol: "☁️" },
+            "2026-06-01": { temp: "31°C", symbol: "⛅" }
+        };
+
+        // CORE REAL-TIME EDITABLE FLIGHT STATE STORES
+        let flightStates = {
+            "MH366": { sched: "09:15", term: "1", gate: "C25", statusEn: "Landed", statusZh: "已降落" },
+            "IT232": { sched: "18:30", term: "1", gate: "A2", statusEn: "Boarding", statusZh: "正在登机" },
+            "MM921": { sched: "08:00", term: "1", gate: "81", statusEn: "On Time", statusZh: "准点" },
+            "MH367": { sched: "15:10", term: "1", gate: "A9", statusEn: "On Time", statusZh: "准点" }
+        };
+
         const tripData = {
             "May 27": {
                 title: { en: "May 27 (Wed) - Arrive Okinawa", zh: "5月27日 (周三) - 抵达冲绳" },
                 region: "okinawa",
-                // Actual synchronized forecast endpoints mapping
                 dateQuery: "2026-05-27",
                 events: [
                     { 
@@ -211,7 +219,7 @@
                         activity: { en: "Depart from KL (MH366) ✈", zh: "吉隆坡起飞出发 (马航 MH366) ✈" }, 
                         location: { en: "KLIA T1", zh: "吉隆坡国际机场 T1" }, 
                         duration: { en: "Flight duration: Approx 6 hours", zh: "飞行耗时约 6 小时" },
-                        flightTracker: { flightNo: "MH 366", targetDate: "2026-05-27", sched: "09:15", defTerm: "1", defGate: "C22" },
+                        flightCode: "MH366",
                         buy: { en: "In-flight duty-free exclusive regional items.", zh: "马航机上免税专属限定旅行周边。" }, 
                         food: { en: "Malaysia Airlines hot chicken or seafood lunch option onboard.", zh: "享用马航提供的空中热食午餐（提供鸡肉或海鲜选项，无牛肉）。" } 
                     },
@@ -220,7 +228,7 @@
                         activity: { en: "Depart from Taoyuan Airport (Tiger Air IT232) ✈", zh: "转机起飞前往冲绳 (台湾虎航 IT232) ✈" }, 
                         location: { en: "Taoyuan Int'l Airport", zh: "台北桃园机场" }, 
                         duration: { en: "Flight duration: 1h 20m", zh: "飞行耗时约 1 小时 20 分钟" },
-                        flightTracker: { flightNo: "IT 232", targetDate: "2026-05-27", sched: "18:30", defTerm: "1", defGate: "B7" },
+                        flightCode: "IT232",
                         buy: { en: "Quick Taiwanese snacks at transit duty-free aisles.", zh: "转机免税走廊的台湾老字号小零食饼干。" }, 
                         food: { en: "Transit refreshments, Taiwanese vegetarian or pork light snacks at the gate.", zh: "候机区域轻食，或享用美味的台式传统海鲜粥、鸡肉饭小吃。" } 
                     },
@@ -387,14 +395,14 @@
                         activity: { en: "Naha Airport - Flight to Taipei (Peach MM921) ✈", zh: "飞机起飞前往台北 (乐桃航空 MM921) ✈" }, 
                         location: { en: "Naha ➔ Taoyuan T1", zh: "那霸飞往台北桃园 T1" }, 
                         duration: { en: "Flight duration: 1h 30m", zh: "飞行耗时约 1 小时 30 分钟" },
-                        flightTracker: { flightNo: "MM 921", targetDate: "2026-05-30", sched: "08:00", defTerm: "1", defGate: "81" },
+                        flightCode: "MM921",
                         buy: { en: "Exclusive regional flight tax-free souvenir packs.", zh: "民航飞机上限定销售的免税护肤礼盒。" }, 
                         food: { en: "Airlines catering tray lunch service on the plane.", zh: "享用飞机上提供的温热机上简餐。" } 
                     },
                     { 
                         time: "08:45", 
                         activity: { en: "Arrive Taoyuan Airport", zh: "顺利飞抵桃园机场" }, 
-                        location: { en: "Terminal 2 Arrivals", zh: "第二航站楼接机大厅" }, 
+                        location: { en: "Terminal 1 Arrivals", zh: "第一航站楼接机大厅" }, 
                         duration: { en: "Customs clear & meeting driver: ~40 mins", zh: "清关与包车司机对接：耗时约 40 分钟" },
                         buy: { en: "Taiwan local 4G/5G high speed tourist internet SIM card.", zh: "机场大厅直接领取已订好的台湾高速全日无限流量上网卡。" }, 
                         food: { en: "Authentic hot bubble milk tea right at airport lounge exit.", zh: "台湾专属大包车司机已在接机大厅举牌等候，上车即享司机准备的正宗珍珠奶茶。" } 
@@ -523,7 +531,7 @@
                         activity: { en: "Airport Flight Check-In", zh: "桃园机场托运、退税与登机" }, 
                         location: { en: "Taoyuan Terminal 1", zh: "台北桃园机场大厅" }, 
                         duration: { en: "Flight duration to KL: 4h 45m", zh: "桃园飞往吉隆坡：飞行耗时约 4 小时 45 分钟" },
-                        flightTracker: { flightNo: "MH 367", targetDate: "2026-06-01", sched: "15:10", defTerm: "1", defGate: "A9" },
+                        flightCode: "MH367",
                         buy: { en: "Airport limited solar cake souvenirs, final tax-free cosmetic packs.", zh: "机场免税店最后补漏：太阳饼、裕珍馨奶油酥饼、顶级免税烟酒。" }, 
                         food: { en: "Final delicious round of local Pearl Milk Tea, warm airport terminal seafood meals.", zh: "在候机大厅吃美味海鲜面，喝最后一杯正宗台式珍珠奶茶，开心回马！" } 
                     }
@@ -531,21 +539,10 @@
             }
         };
 
-        // OBJECT ARRAY TO MAP SPECIFIC FORECAST PARAMETERS DYNAMICALLY
-        let dateWeatherMap = {
-            "2026-05-27": { temp: "29°C", symbol: "☁️" },
-            "2026-05-28": { temp: "28°C", symbol: "⛅" },
-            "2026-05-29": { temp: "27°C", symbol: "🌧️" },
-            "2026-05-30": { temp: "29°C", symbol: "☀️" },
-            "2026-05-31": { temp: "34°C", symbol: "☁️" },
-            "2026-06-01": { temp: "31°C", symbol: "⛅" }
-        };
-
         async function fetchLiveWeather() {
             try {
-                // Query active Open-Meteo multi-forecast arrays for real current conditions lookups
-                const okiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.okinawa.lat}&longitude=${locationCoords.okinawa.lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,weather_code&timezone=auto`;
-                const tpeUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.taipei.lat}&longitude=${locationCoords.taipei.lon}&current=temperature_2m,weather_code&daily=temperature_2m_max,weather_code&timezone=auto`;
+                const okiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.okinawa.lat}&longitude=${locationCoords.okinawa.lon}&current=temperature_2m,weather_code&timezone=auto`;
+                const tpeUrl = `https://api.open-meteo.com/v1/forecast?latitude=${locationCoords.taipei.lat}&longitude=${locationCoords.taipei.lon}&current=temperature_2m,weather_code&timezone=auto`;
 
                 const [okiRes, tpeRes] = await Promise.all([fetch(okiUrl), fetch(tpeUrl)]);
                 
@@ -568,13 +565,7 @@
                     document.getElementById('oki-icon-box').innerHTML = okiMeta.icon;
                     document.getElementById('tpe-icon-box').innerHTML = tpeMeta.icon;
 
-                    // Automatically override fallback arrays using newly fetched server forecast parameters if matching timeline days are near
-                    if(okiData.daily && tpeData.daily) {
-                        // Dynamically loops can write active parameters directly
-                        console.log("Live multi-day forecast pipeline connected successfully.");
-                    }
-
-                    renderTabs(); // Synchronize tabs bar presentation 
+                    renderTabs(); 
                 }
             } catch (err) {
                 console.error("Weather channel request interrupted:", err);
@@ -616,14 +607,12 @@
         function renderChecklists() {
             const bringContainer = document.getElementById('bring-list-container');
             const buyContainer = document.getElementById('buy-list-container');
-            
-            bringContainer.innerHTML = '';
-            buyContainer.innerHTML = '';
+            bringContainer.innerHTML = ''; buyContainer.innerHTML = '';
 
             checklistData.bring.forEach(item => {
                 const labelText = currentLang === 'en' ? item.en : item.zh;
                 bringContainer.innerHTML += `
-                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer select-none">
+                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl cursor-pointer select-none">
                         <input type="checkbox" id="${item.id}" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 mt-0.5 accent-blue-600">
                         <span class="text-xs text-slate-700 font-medium leading-tight">${labelText}</span>
                     </label>
@@ -639,6 +628,19 @@
                     </label>
                 `;
             });
+        }
+
+        function toggleAdminMode() {
+            adminModeActive = !adminModeActive;
+            const btn = document.getElementById('admin-toggle');
+            btn.className = adminModeActive ? "bg-amber-500 text-slate-900 px-2 py-1 rounded-lg text-xs font-bold shadow-md" : "bg-blue-900/50 text-white px-2 py-1 rounded-lg text-xs font-semibold";
+            renderItinerary();
+        }
+
+        // Live updating framework tool allowing updates straight from terminal lobby boards
+        updateFlightField = (code, field, val) => {
+            flightStates[code][field] = val;
+            renderItinerary();
         }
 
         function toggleLanguage() {
@@ -661,9 +663,6 @@
             fetchLiveWeather();
             renderTabs();
             renderItinerary();
-            if(!document.getElementById('checklist-view').classList.contains('hidden')) {
-                renderChecklists();
-            }
         }
 
         function renderTabs() {
@@ -672,19 +671,16 @@
             Object.keys(tripData).forEach(day => {
                 const isActive = day === activeDay;
                 const queryKey = tripData[day].dateQuery;
-                
-                // SYNCHRONIZED REFRESH LINE: Extracts exact matching forecast data from the matrix mapping arrays
                 const actualDayForecast = dateWeatherMap[queryKey] || { temp: "--°C", symbol: "⏳" };
 
                 const btn = document.createElement('button');
-                btn.className = `px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 flex items-center space-x-1.5 ${
-                    isActive ? 'bg-blue-600 text-white shadow-md scale-105' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
+                btn.className = `px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 flex items-center justify-center space-x-1.5 ${
+                    isActive ? 'bg-blue-600 text-white shadow-md scale-105 shadow-blue-200' : 'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'
                 }`;
                 
-                // Date layout includes symbol + actual temperature forecast value seamlessly
                 btn.innerHTML = `
                     <span>${day}</span>
-                    <span class="text-[10px] opacity-90 font-semibold bg-slate-100/10 px-1 py-0.5 rounded flex items-center gap-0.5">
+                    <span class="font-semibold tracking-tight opacity-90 text-[11px]">
                         ${actualDayForecast.symbol} ${actualDayForecast.temp}
                     </span>
                 `;
@@ -699,30 +695,6 @@
             document.getElementById('current-date-badge').innerText = activeDay;
         }
 
-        function getFlightStatus(tracker) {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const date = String(now.getDate()).padStart(2, '0');
-            const todayString = `${year}-${month}-${date}`;
-
-            if (todayString !== tracker.targetDate) {
-                return {
-                    term: tracker.defTerm,
-                    gate: currentLang === 'en' ? "Pending" : "即将安排",
-                    status: currentLang === 'en' ? "Scheduled" : "计划中",
-                    color: "text-blue-400"
-                };
-            } else {
-                return {
-                    term: tracker.defTerm,
-                    gate: tracker.defGate,
-                    status: currentLang === 'en' ? "Boarding" : "正在登机",
-                    color: "text-emerald-400 animate-pulse"
-                };
-            }
-        }
-
         function renderItinerary() {
             const container = document.getElementById('itinerary-timeline');
             const data = tripData[activeDay];
@@ -732,34 +704,51 @@
             data.events.forEach(item => {
                 let flightHtml = '';
                 
-                if (item.flightTracker) {
-                    const trackingInfo = getFlightStatus(item.flightTracker);
-                    flightHtml = `
-                        <div class="mx-2 bg-slate-900 text-slate-100 rounded-xl p-3 text-xs shadow-inner space-y-2">
-                            <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
-                                <span class="font-black text-amber-400 tracking-wider text-sm"><i class="fa-solid fa-plane-departure mr-1"></i> ${item.flightTracker.flightNo}</span>
-                                <span class="text-[10px] bg-blue-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">${labelTranslations[currentLang].flightPanel}</span>
+                if (item.flightCode) {
+                    const fl = flightStates[item.flightCode];
+                    const statusText = currentLang === 'en' ? fl.statusEn : fl.statusZh;
+                    
+                    if (!adminModeActive) {
+                        // Regular live viewer panel
+                        flightHtml = `
+                            <div class="mx-2 bg-slate-900 text-slate-100 rounded-xl p-3 text-xs shadow-inner space-y-2">
+                                <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
+                                    <span class="font-black text-amber-400 tracking-wider Jack-In-Line"><i class="fa-solid fa-plane-departure mr-1"></i> ${item.flightCode}</span>
+                                    <span class="text-[10px] bg-blue-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">${labelTranslations[currentLang].flightPanel}</span>
+                                </div>
+                                <div class="grid grid-cols-4 text-center gap-1">
+                                    <div>
+                                        <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].scheduled}</span>
+                                        <span class="font-bold text-white text-xs">${fl.sched}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].terminal}</span>
+                                        <span class="font-bold text-white text-xs">T${fl.term}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].gate}</span>
+                                        <span class="font-bold text-amber-300 text-xs">${fl.gate}</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].status}</span>
+                                        <span class="font-extrabold text-xs text-emerald-400 animate-pulse">${statusText}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="grid grid-cols-4 text-center gap-1">
-                                <div>
-                                    <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].scheduled}</span>
-                                    <span class="font-bold text-white text-xs">${item.flightTracker.sched}</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].terminal}</span>
-                                    <span class="font-bold text-white text-xs">T${trackingInfo.term}</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].gate}</span>
-                                    <span class="font-bold text-amber-300 text-xs">${trackingInfo.gate}</span>
-                                </div>
-                                <div>
-                                    <span class="text-slate-400 block text-[9px] uppercase tracking-tight">${labelTranslations[currentLang].status}</span>
-                                    <span class="font-extrabold text-xs ${trackingInfo.color}">${trackingInfo.status}</span>
+                        `;
+                    } else {
+                        // Admin on-the-go airport correction module panel
+                        flightHtml = `
+                            <div class="mx-2 bg-slate-800 text-slate-100 rounded-xl p-3 text-xs space-y-2 border-2 border-dashed border-amber-400">
+                                <p class="font-bold text-amber-400 text-[11px]"><i class="fa-solid fa-pen-to-square"></i> Edit Flight ${item.flightCode} (On-the-go Control)</p>
+                                <div class="grid grid-cols-3 gap-2 text-slate-900">
+                                    <input type="text" class="bg-white p-1 rounded text-xs" placeholder="Gate" value="${fl.gate}" onchange="updateFlightField('${item.flightCode}', 'gate', this.value)">
+                                    <input type="text" class="bg-white p-1 rounded text-xs" placeholder="Terminal" value="${fl.term}" onchange="updateFlightField('${item.flightCode}', 'term', this.value)">
+                                    <input type="text" class="bg-white p-1 rounded text-xs" placeholder="Status EN" value="${fl.statusEn}" onchange="updateFlightField('${item.flightCode}', 'statusEn', this.value)">
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }
 
                 html += `
