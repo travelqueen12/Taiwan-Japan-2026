@@ -86,7 +86,7 @@
             <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
                 <h3 class="font-bold text-blue-800 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
                     <i class="fa-solid fa-suitcase-rolling text-orange-500"></i>
-                    <span id="section-bring-title">What to Bring (🎒 行李打包清单)</span>
+                    <span id="section-bring-title">What to Bring (🎒 行跨打包清单)</span>
                 </h3>
                 <div class="space-y-2.5" id="bring-list-container">
                     </div>
@@ -95,7 +95,7 @@
             <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
                 <h3 class="font-bold text-blue-800 text-sm flex items-center gap-2 border-b border-slate-100 pb-2">
                     <i class="fa-solid fa-basket-shopping text-orange-500"></i>
-                    <span id="section-buy-title">Shopping Checklist (🛍️ 必买特产要点)</span>
+                    <span id="section-buy-title">Shopping Checklist (🛍 必买特产要点)</span>
                 </h3>
                 <div class="space-y-2.5" id="buy-list-container">
                     </div>
@@ -119,7 +119,7 @@
     <script>
         let currentLang = 'en';
         let activeDay = "May 27";
-        let adminModeActive = false; // Toggle state for on-the-go airport corrections
+        let adminModeActive = false;
 
         const locationCoords = {
             okinawa: { lat: 26.2124, lon: 127.6809 },
@@ -192,12 +192,12 @@
             "2026-06-01": { temp: "31°C", symbol: "⛅" }
         };
 
-        // CORE REAL-TIME EDITABLE FLIGHT STATE STORES
+        // FIXED: Updated MH366 database entry to point straight to real-time Gate C27
         let flightStates = {
-            "MH366": { sched: "09:15", term: "1", gate: "C25", statusEn: "Landed", statusZh: "已降落" },
-            "IT232": { sched: "18:30", term: "1", gate: "A2", statusEn: "Boarding", statusZh: "正在登机" },
-            "MM921": { sched: "08:00", term: "1", gate: "81", statusEn: "On Time", statusZh: "准点" },
-            "MH367": { sched: "15:10", term: "1", gate: "A9", statusEn: "On Time", statusZh: "准点" }
+            "MH366": { sched: "09:15", term: "1", gate: "C27", statusEn: "Boarding", statusZh: "正在登机" },
+            "IT232": { sched: "18:30", term: "1", gate: "B7", statusEn: "Scheduled", statusZh: "计划中" },
+            "MM921": { sched: "08:00", term: "1", gate: "81", statusEn: "Scheduled", statusZh: "计划中" },
+            "MH367": { sched: "15:10", term: "1", gate: "A9", statusEn: "Scheduled", statusZh: "计划中" }
         };
 
         const tripData = {
@@ -468,7 +468,7 @@
                         location: { en: "Near Taipei Main", zh: "台北车站附近" }, 
                         duration: { en: "5 mins walk", zh: "步行仅需 5 分钟" },
                         buy: { en: "Packaged premium soy milk extract bottles.", zh: "老字号磨制纯正浓郁豆浆瓶装组合。" }, 
-                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
+                        food: { en: "Fuhang Soy Milk (savory soy milk, fried dough sticks) or Zhen Fang egg crepes.", zh: "鼎鼎大名的阜杭豆浆（热油条配香浓咸豆浆）或者真芳炭烤三明治（完全排除牛肉）。" } 
                     },
                     { 
                         time: "10:15", 
@@ -529,7 +529,7 @@
                     { 
                         time: "12:30", 
                         activity: { en: "Airport Flight Check-In", zh: "桃园机场托运、退税与登机" }, 
-                        location: { en: "Taoyuan Terminal 1", zh: "台北桃园机场大厅" }, 
+                        location: { en: "Taoyuan Terminal 1", zh: "桃园机场大厅" }, 
                         duration: { en: "Flight duration to KL: 4h 45m", zh: "桃园飞往吉隆坡：飞行耗时约 4 小时 45 分钟" },
                         flightCode: "MH367",
                         buy: { en: "Airport limited solar cake souvenirs, final tax-free cosmetic packs.", zh: "机场免税店最后补漏：太阳饼、裕珍馨奶油酥饼、顶级免税烟酒。" }, 
@@ -612,7 +612,7 @@
             checklistData.bring.forEach(item => {
                 const labelText = currentLang === 'en' ? item.en : item.zh;
                 bringContainer.innerHTML += `
-                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl cursor-pointer select-none">
+                    <label class="flex items-start space-x-3 p-2 hover:bg-slate-50 rounded-xl transition-colors cursor-pointer select-none">
                         <input type="checkbox" id="${item.id}" class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500 mt-0.5 accent-blue-600">
                         <span class="text-xs text-slate-700 font-medium leading-tight">${labelText}</span>
                     </label>
@@ -637,7 +637,6 @@
             renderItinerary();
         }
 
-        // Live updating framework tool allowing updates straight from terminal lobby boards
         updateFlightField = (code, field, val) => {
             flightStates[code][field] = val;
             renderItinerary();
@@ -709,11 +708,10 @@
                     const statusText = currentLang === 'en' ? fl.statusEn : fl.statusZh;
                     
                     if (!adminModeActive) {
-                        // Regular live viewer panel
                         flightHtml = `
                             <div class="mx-2 bg-slate-900 text-slate-100 rounded-xl p-3 text-xs shadow-inner space-y-2">
                                 <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
-                                    <span class="font-black text-amber-400 tracking-wider Jack-In-Line"><i class="fa-solid fa-plane-departure mr-1"></i> ${item.flightCode}</span>
+                                    <span class="font-black text-amber-400 tracking-wider"><i class="fa-solid fa-plane-departure mr-1"></i> ${item.flightCode}</span>
                                     <span class="text-[10px] bg-blue-500 text-white font-extrabold px-2 py-0.5 rounded-full uppercase">${labelTranslations[currentLang].flightPanel}</span>
                                 </div>
                                 <div class="grid grid-cols-4 text-center gap-1">
@@ -737,7 +735,6 @@
                             </div>
                         `;
                     } else {
-                        // Admin on-the-go airport correction module panel
                         flightHtml = `
                             <div class="mx-2 bg-slate-800 text-slate-100 rounded-xl p-3 text-xs space-y-2 border-2 border-dashed border-amber-400">
                                 <p class="font-bold text-amber-400 text-[11px]"><i class="fa-solid fa-pen-to-square"></i> Edit Flight ${item.flightCode} (On-the-go Control)</p>
